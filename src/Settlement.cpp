@@ -6,12 +6,21 @@ using namespace std;
 class Settlement {
   private:
     std::string name;
-    enum SettlementType{
+    enum SettlementType {
         Village,
         City,
         Metropolice
     };
+    SettlementType _settlementType;
   public:
-    //T functionName(T arg);
-    //... .. ...
+    Settlement(const string &name, SettlementType type) :name(name),_settlementType(type){}
+    const string &getName() const{
+        return name;
+    }
+    SettlementType getType() const{
+        return _settlementType;
+    }
+    const string toString() const{
+        cout << "new settlement " + name << endl;
+    };
 };
