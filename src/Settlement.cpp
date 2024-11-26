@@ -6,11 +6,6 @@ using namespace std;
 class Settlement {
   private:
     std::string name;
-    enum SettlementType {
-        Village,
-        City,
-        Metropolice
-    };
     SettlementType _settlementType;
   public:
     Settlement(const string &name, SettlementType type) :name(name),_settlementType(type){}
