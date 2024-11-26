@@ -10,7 +10,7 @@ class Facility {
     int price;
     enum FacilityStatus{
         UNDER_CONSTRUCTION,
-        BBBBBBBBBBBBBBB
+        
     };
   public:
     //T functionName(T arg);
