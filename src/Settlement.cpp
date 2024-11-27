@@ -3,19 +3,32 @@
 using namespace std;
 
 
-class Settlement {
-  private:
-    std::string name;
-    SettlementType _settlementType;
-  public:
-    Settlement(const string &name, SettlementType type) :name(name),_settlementType(type){}
-    const string &getName() const{
-        return name;
-    }
-    SettlementType getType() const{
-        return _settlementType;
-    }
-    const string toString() const{
-        cout << "new settlement " + name << endl;
-    };
-};
+
+
+Settlement::Settlement(const string &name, SettlementType type)
+    : name(name), type(type) {}
+
+const string& Settlement::getName() const{return name;}
+
+SettlementType Settlement::getType() const{return type;}
+
+const string Settlement::toString() const{
+  string val;
+  switch (type)
+  {
+  case SettlementType::CITY:
+    val = "City";
+    break;
+  case SettlementType::VILLAGE:
+    val = "Village";
+    break;
+  case SettlementType::METROPOLIS:
+    val = "Metropolis";
+    break;
+    default:
+            throw std::invalid_argument("Unknown SettlementType encountered in toString");
+  }
+
+  return "Settlement Name:" + name + " Type: " + val;
+}
+
