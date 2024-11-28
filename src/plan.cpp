@@ -41,8 +41,12 @@ void Plan::step(){
 }
 
 
- //TODO
 void Plan::printStatus(){
+    string s = getStatusString();
+    cout << "status: " + s << endl;
+}
+
+const string Plan::getStatusString() const{
     string s;
     if (status == PlanStatus:: AVALIABLE){
         s = "AVALIABLE";
@@ -50,11 +54,24 @@ void Plan::printStatus(){
     else{
         s = "UNDER CONSTRUCTION";
     }
-    cout << "status: " + s << endl;
+    return s;
 }
-        // const vector<Facility*> &getFacilities() const;
-        // void addFacility(Facility* facility);
-        // const string toString() const;
+
+const vector<Facility*> &Plan::getFacilities() const{
+    return facilities;
+}
+
+void Plan::addFacility(Facility* facility){
+    facilities.push_back(facility);
+}
+
+const string Plan::toString() const{
+    string s = "plan id: " + to_string(plan_id) + "settlementName: " + settlement.Settlement::getName()
+    + "\n status: " + getStatusString() +  "scores- economy:" 
+    + to_string(economy_score) + " enviroment:" + to_string(environment_score) +
+    "life quality: " + to_string(life_quality_score);
+    return s;
+}
 
     // private:
     //     int plan_id;
