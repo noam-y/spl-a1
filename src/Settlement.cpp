@@ -32,3 +32,4 @@ const string Settlement::toString() const{
   return "Settlement Name:" + name + " Type: " + val;
 }
 
+
