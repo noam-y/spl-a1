@@ -17,7 +17,13 @@ plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facil
     life_quality_score = 0;
     economy_score = 0;
     environment_score = 0;
-} 
+}
+
+//NO NEED FOR = OPERATOR HERE- 
+// Plan::Plan(const Plan& other):plan_id(other.plan_id), settlement(other.settlement),
+//  facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score){
+//     selectionPolicy = new SelectionPolicy(other.selectionPolicy);
+//  }
 //TODO: COPY CONSTRUCTOR destructor, copy constructor, copy assignment opreator HALF RULE OF FIVE- EXPLAINED IN FORUM
 const int Plan::getlifeQualityScore() const{
     return life_quality_score;
