@@ -3,18 +3,33 @@
 using namespace std;
 
 
-class Settlement {
-  private:
-    std::string name;
-    SettlementType settlementType;
-    enum SettlementType {
-        Village,
-        City,
-        Metropolice
-    };
-  public:
-    Settlement(const string &name, SettlementType type); //name(name),settlementType((SettlementType)type){}
-    const string &getName() const;
-    SettlementType getType() const;
-    const string toString() const;
-};
+
+
+Settlement::Settlement(const string &name, SettlementType type)
+    : name(name), type(type) {}
+
+const string& Settlement::getName() const{return name;}
+
+SettlementType Settlement::getType() const{return type;}
+
+const string Settlement::toString() const{
+  string val;
+  switch (type)
+  {
+  case SettlementType::CITY:
+    val = "City";
+    break;
+  case SettlementType::VILLAGE:
+    val = "Village";
+    break;
+  case SettlementType::METROPOLIS:
+    val = "Metropolis";
+    break;
+    default:
+            throw std::invalid_argument("Unknown SettlementType encountered in toString");
+  }
+
+  return "Settlement Name:" + name + " Type: " + val;
+}
+
+

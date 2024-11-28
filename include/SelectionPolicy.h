@@ -5,6 +5,7 @@ using std::vector;
 
 class SelectionPolicy {
     public:
+        SelectionPolicy(const SelectionPolicy& other); // NEW COPY CONSTRUCTOR
         virtual const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) = 0;
         virtual const string toString() const = 0;
         virtual SelectionPolicy* clone() const = 0;

@@ -5,15 +5,39 @@ using namespace std;
 
 
 class FacilityType {
-  private:
-    std::string name;
-    int price;
+  protected:
     enum FacilityCategory{
         LifeQuality,
         Economy,
         Sustainability
     };
+      const string name;
+      const FacilityCategory category;
+      const int price;
+      const int lifeQuality_score;
+      const int economy_score;
+      const int environment_score;
+
   public:
-    //T functionName(T arg);
-    //... .. ...
+      FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score)
+      :name(name), category(category), price(price), lifeQuality_score(lifeQuality_score), economy_score(economy_score), environment_score(environment_score){};
+      const string &getName() const{
+        return name;
+      }
+      int getCost() const{
+        return price;
+      }
+      int getLifeQualityScore() const{
+        return lifeQuality_score;
+      }
+      int getEnvironmentScore() const{
+        return environment_score;
+      }
+      int getEconomyScore() const{
+        return economy_score;
+      }
+      FacilityCategory getCategory() const{
+        return category;
+      }
+
 };
