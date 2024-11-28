@@ -19,11 +19,20 @@ plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facil
     environment_score = 0;
 }
 
-//NO NEED FOR = OPERATOR HERE- 
-// Plan::Plan(const Plan& other):plan_id(other.plan_id), settlement(other.settlement),
-//  facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score){
-//     selectionPolicy = new SelectionPolicy(other.selectionPolicy);
-//  }
+
+Plan::Plan(const Plan& other):plan_id(other.plan_id), settlement(other.settlement),
+status(other.status),
+ facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score),
+ economy_score(other.economy_score), environment_score(other.environment_score){
+    selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
+    for (Facility* fa : other.facilities){
+        this->facilities.push_back(new Facility(*fa));
+    }
+    for (Facility* fa : other.underConstruction){
+        this->underConstruction.push_back(new Facility(*fa));
+    }
+    // TODO facilityOptions
+ }
 //TODO: COPY CONSTRUCTOR destructor, copy constructor, copy assignment opreator HALF RULE OF FIVE- EXPLAINED IN FORUM
 const int Plan::getlifeQualityScore() const{
     return life_quality_score;
@@ -68,7 +77,16 @@ const vector<Facility*> &Plan::getFacilities() const{
 }
 
 void Plan::addFacility(Facility* facility){
-    facilities.push_back(facility);
+    if ((facility->getStatus()) == FacilityStatus::OPERATIONAL){
+        facilities.push_back(facility);
+        this->economy_score = this->economy_score + facility->getEconomyScore();
+        this->environment_score = this->environment_score + facility->getEnvironmentScore();
+        this->life_quality_score = this->life_quality_score + facility->getLifeQualityScore();
+    }
+    else{
+        underConstruction.push_back(facility);
+    }
+    
 }
 
 const string Plan::toString() const{
@@ -88,3 +106,16 @@ const string Plan::toString() const{
     //     vector<Facility*> underConstruction;
     //     const vector<FacilityType> &facilityOptions;
     //     int life_quality_score, economy_score, environment_score;
+
+
+Plan::~Plan() {
+    delete selectionPolicy;
+
+    for (Facility* facility : facilities) {
+        delete facility;
+    }
+
+    for (Facility* facility : underConstruction) {
+        delete facility;
+    }
+}
