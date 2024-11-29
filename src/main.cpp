@@ -1,5 +1,7 @@
 #include "Simulation.h"
 #include "Settlement.h"
+#include "SelectionPolicy.h"
+
 
 #include <iostream>
 
@@ -21,7 +23,17 @@ int main(int argc, char** argv){
     // simulation.start();
 
     Settlement s = Settlement("BS", SettlementType::CITY);
-    cout << s.toString() << endl;
+    vector<FacilityType> facilities = {
+    FacilityType("Facility1", FacilityCategory::LIFE_QUALITY, 100, 80, 70, 90),
+    FacilityType("Facility2", FacilityCategory::ECONOMY, 200, 60, 85, 75),
+    FacilityType("Facility3", FacilityCategory::ECONOMY, 150, 65, 80, 70)
+};
+
+EconomySelection selection;
+cout << selection.toString() << endl;
+    
+
+    //cout << s.toString() << endl;
     if(backup!=nullptr){
     	delete backup;
     	backup = nullptr;

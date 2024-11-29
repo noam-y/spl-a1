@@ -10,6 +10,7 @@ compile : src/Auxiliary.cpp src/main.cpp src/Simulation.cpp
 	g++ -c -Wall -g -Iinclude -o bin/main.o src/main.cpp
 	g++ -c -Wall -g -Iinclude -o bin/Simulation.o src/Simulation.cpp
 	g++ -c -Wall -g -Iinclude -o bin/Settlement.o src/Settlement.cpp
+	g++ -c -Wall -g -Iinclude -o bin/SelectionPolicy.o src/Settlement.cpp
 
 link : bin/main.o bin/Auxiliary.o bin/Simulation.o bin/Settlement.o
 	g++ -o bin/program bin/main.o bin/Auxiliary.o bin/Simulation.o bin/Settlement.o
