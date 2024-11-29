@@ -45,6 +45,19 @@ status(other.status), facilityOptions(other.facilityOptions), life_quality_score
 }
 
 
+    // Plan::Plan& operator=(Plan&& other)
+    // {
+    //     if (this != &other) {
+    //         delete data; // Free existing resource
+    //         data = other.data; // Transfer ownership
+    //         other.data = nullptr; // Nullify source
+    //         cout << "Move assignment called" << endl;
+    //     }
+    //     return *this;
+    // }
+
+
+
 //TODO: COPY CONSTRUCTOR destructor, copy constructor, HALF RULE OF FIVE- EXPLAINED IN FORUM
 const int Plan::getlifeQualityScore() const{
     return life_quality_score;
