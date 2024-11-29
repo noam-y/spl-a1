@@ -1,10 +1,12 @@
 #pragma once
 #include <vector>
-#include "Facility.h"
+
+
 using std::vector;
 
 class SelectionPolicy {
     public:
+
         virtual const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) = 0;
         virtual const string toString() const = 0;
         virtual SelectionPolicy* clone() const = 0;
@@ -19,7 +21,7 @@ class NaiveSelection: public SelectionPolicy {
         const string toString() const override;
         NaiveSelection *clone() const override;
         ~NaiveSelection() override = default;
-        const FacilityType& selectFacility(const vector<FacilityType>& facilitiesOptions) override; //
+        
     private:
         int lastSelectedIndex;
         vector<FacilityType> facilitiesList; //to save all the selected facilities 

@@ -1,6 +1,7 @@
-#include "Simulation.h"
-#include "Settlement.h"
-#include "SelectionPolicy.h"
+#include "../include/Simulation.h"
+#include "../include/Facility.h"
+#include "../include/Settlement.h"
+#include "../include/SelectionPolicy.h"
 
 
 #include <iostream>
@@ -21,16 +22,19 @@ int main(int argc, char** argv){
     string configurationFile = argv[1];
     // Simulation simulation(configurationFile);
     // simulation.start();
+    vector<FacilityType> ft = vector<FacilityType>();
+    ft.push_back(FacilityType("Desalination Plant",FacilityCategory::ECONOMY,2,2,1,2));
+    ft.push_back(FacilityType("Kindergarten",FacilityCategory::ECONOMY,12,1,0,0));
+    ft.push_back(FacilityType("Hospital",FacilityCategory::ECONOMY,6,3,1,2));
+    ft.push_back(FacilityType("1",FacilityCategory::ECONOMY,12,1,0,0));
+    ft.push_back(FacilityType("2",FacilityCategory::ECONOMY,12,1,0,0));
+    ft.push_back(FacilityType("3",FacilityCategory::ECONOMY,12,1,0,0));
+    NaiveSelection ns = NaiveSelection();
 
-    Settlement s = Settlement("BS", SettlementType::CITY);
-    vector<FacilityType> facilities = {
-    FacilityType("Facility1", FacilityCategory::LIFE_QUALITY, 100, 80, 70, 90),
-    FacilityType("Facility2", FacilityCategory::ECONOMY, 200, 60, 85, 75),
-    FacilityType("Facility3", FacilityCategory::ECONOMY, 150, 65, 80, 70)
-};
+    cout<< ns.selectFacility(ft).getName() << endl;
+    cout<< ns.selectFacility(ft).getName() << endl;
+    cout<< ns.selectFacility(ft).getName() << endl;
 
-EconomySelection selection;
-cout << selection.toString() << endl;
     
 
     //cout << s.toString() << endl;
