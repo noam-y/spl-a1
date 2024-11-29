@@ -13,6 +13,13 @@ class SelectionPolicy;
 class Simulation {
     public:
         Simulation(const string &configFilePath);
+        // Rule of Five
+        Simulation(const Simulation& other); // Copy constructor
+        ~Simulation();                               // Defult destructor        
+        Simulation& operator=(const Simulation& other); // Copy assignment operator
+        Simulation(Simulation&& other) noexcept;     // Move constructor
+        Simulation& operator=(Simulation&& other) noexcept; // Move assignment operator
+       
         void start();
         void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
         void addAction(BaseAction *action);
