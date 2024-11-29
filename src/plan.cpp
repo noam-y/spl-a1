@@ -10,13 +10,10 @@ using namespace std;
 
 
 Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions):
-plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facilityOptions(facilityOptions){
-     status = PlanStatus::AVALIABLE;
+plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facilityOptions(facilityOptions),
+life_quality_score(), economy_score(0), environment_score(0), status(PlanStatus::AVALIABLE){
     vector<Facility*> facilities; //TODO FIX
     vector<Facility*> underConstruction;
-    life_quality_score = 0;
-    economy_score = 0;
-    environment_score = 0;
 }
 
 
@@ -33,7 +30,7 @@ status(other.status),
     }
     // TODO facilityOptions
  }
-//TODO: COPY CONSTRUCTOR destructor, copy constructor, copy assignment opreator HALF RULE OF FIVE- EXPLAINED IN FORUM
+//TODO: COPY CONSTRUCTOR destructor, copy constructor, HALF RULE OF FIVE- EXPLAINED IN FORUM
 const int Plan::getlifeQualityScore() const{
     return life_quality_score;
 }
@@ -82,6 +79,7 @@ void Plan::addFacility(Facility* facility){
         this->economy_score = this->economy_score + facility->getEconomyScore();
         this->environment_score = this->environment_score + facility->getEnvironmentScore();
         this->life_quality_score = this->life_quality_score + facility->getLifeQualityScore();
+        // TODO update balance
     }
     else{
         underConstruction.push_back(facility);
@@ -119,3 +117,40 @@ Plan::~Plan() {
         delete facility;
     }
 }
+
+
+// Plan& Plan::operator=(const Plan& other){
+//     if (&other != this){
+//         this->plan_id = other.plan_id;
+//         this->settlement = other.settlement;
+//         delete this->selectionPolicy;
+//         this->selectionPolicy  = other.selectionPolicy-> clone();
+//         this->status = other.status;
+//         for (int i = 0; i < other.facilities.size(); i++){
+//             delete this->facilities.at(i);
+//         } // deleting one by one faciities vector
+
+//         this->facilities.clear();
+
+//         for (int i = 0; i <other.facilities.size(); i++){
+//             this->facilities.push_back(new Facility(*other.facilities.at(i)));
+//         } // deep copy of facilities*
+
+//         // same thing for underconstruction vector- 
+//         for (int i = 0; i < other.underConstruction.size(); i++){
+//             delete this->underConstruction.at(i);
+//         }
+
+//         this->underConstruction.clear();
+
+//         for (int i = 0; i <other.underConstruction.size(); i++){
+//             this->underConstruction.push_back(new Facility(*other.underConstruction.at(i)));
+//         } 
+//         life_quality_score = other.life_quality_score;
+//         economy_score = other.economy_score;
+//         environment_score = other.environment_score;
+
+//     }
+
+//     return *this;
+// }
