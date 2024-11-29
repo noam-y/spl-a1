@@ -30,6 +30,21 @@ status(other.status),
     }
     // TODO facilityOptions
  }
+
+Plan::Plan(Plan&& other):plan_id(other.plan_id), settlement(other.settlement),
+status(other.status), facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score),
+ economy_score(other.economy_score), environment_score(other.environment_score){
+    for (Facility* fa : other.facilities){
+        fa = nullptr;
+    }
+        for (Facility* fa : other.underConstruction){
+        fa = nullptr;
+    }
+    other.selectionPolicy = nullptr;
+
+}
+
+
 //TODO: COPY CONSTRUCTOR destructor, copy constructor, HALF RULE OF FIVE- EXPLAINED IN FORUM
 const int Plan::getlifeQualityScore() const{
     return life_quality_score;
