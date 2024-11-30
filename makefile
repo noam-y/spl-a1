@@ -14,7 +14,6 @@ compile : src/Auxiliary.cpp src/main.cpp src/Simulation.cpp src/Settlement.cpp s
 	g++ -c -Wall -g -Iinclude -o bin/FacilityType.o src/FacilityType.cpp
 	g++ -c -Wall -g -Iinclude -o bin/selectionpolicy2.o src/selectionpolicy2.cpp
 
-
 link : bin/main.o bin/Auxiliary.o bin/Simulation.o bin/Settlement.o
 	g++ -o bin/program bin/main.o bin/Auxiliary.o bin/Simulation.o bin/Settlement.o bin/Facility.o bin/FacilityType.o bin/selectionpolicy2.o
 

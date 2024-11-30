@@ -17,8 +17,8 @@ int main(int argc, char** argv){
     }
 
     string configurationFile = argv[1];
-    // Simulation simulation(configurationFile);
-    // simulation.start();
+    Simulation simulation(configurationFile);
+    simulation.start();
 
     Settlement s = Settlement("BS", SettlementType::CITY);
     cout << s.toString() << endl;
