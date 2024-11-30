@@ -49,3 +49,11 @@ void AddPlan::act(Simulation &simulation){
     }
     simulation.addPlan(stl, selectP);
 }
+
+AddSettlement::AddSettlement(const string &settlementName,SettlementType settlementType):
+settlementName(settlementName), settlementType(settlementType){}
+
+void AddSettlement::act(Simulation &simulation) {
+    Settlement stl = Settlement(settlementName,settlementType);
+    simulation.addSettlement(&stl);
+}
