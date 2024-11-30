@@ -8,6 +8,8 @@ using namespace std;
 NaiveSelection::NaiveSelection() : lastSelectedIndex(-1) {}
 NaiveSelection::NaiveSelection(const NaiveSelection &other) : lastSelectedIndex(other.lastSelectedIndex) {}
 
+// Destructor - use default
+
 const FacilityType &NaiveSelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
     if (facilitiesOptions.empty())
@@ -43,6 +45,8 @@ NaiveSelection *NaiveSelection::clone() const
 // balanced selection:
 BalancedSelection::BalancedSelection(int LifeQualityScore, int EconomyScore, int EnvironmentScore) : LifeQualityScore(LifeQualityScore), EconomyScore(EconomyScore), EnvironmentScore(EnvironmentScore) {}
 BalancedSelection::BalancedSelection(const BalancedSelection &other) : LifeQualityScore(other.LifeQualityScore), EconomyScore(other.EconomyScore), EnvironmentScore(other.EnvironmentScore) {}
+
+// Destructor - use default
 
 int BalancedSelection::balanceDiff(int LifeQualityScore, int EconomyScore, int EnvironmentScore)
 {
@@ -81,6 +85,8 @@ BalancedSelection *BalancedSelection::clone() const
 // constacturs:
 EconomySelection::EconomySelection() : lastSelectedIndex(-1) {}
 EconomySelection::EconomySelection(const EconomySelection &other) : lastSelectedIndex(other.lastSelectedIndex) {}
+
+// Destructor - use default
 
 const FacilityType &EconomySelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
@@ -126,6 +132,8 @@ EconomySelection *EconomySelection::clone() const
 // constructors
  SustainabilitySelection::SustainabilitySelection(const SustainabilitySelection& other):lastSelectedIndex(other.lastSelectedIndex){}
  SustainabilitySelection:: SustainabilitySelection(): lastSelectedIndex(-1){}
+
+// Destructor - use default
 
  const FacilityType& SustainabilitySelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
      if (facilitiesOptions.empty()){
