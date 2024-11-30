@@ -1,11 +1,10 @@
-#include <iostream>
-using namespace std;
 #include "../include/Action.h"
-#include "../include/Plan.h"
 #include "../include/Simulation.h"
-#include "../include/selectionPolicy.h"
+#include "../include/Plan.h"
+#include "../include/SelectionPolicy.h"
+#include <iostream>
 
-#include <string>
+using namespace std;
 
 BaseAction::BaseAction():errorMsg(), status(){}
 
