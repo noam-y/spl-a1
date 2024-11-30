@@ -25,7 +25,7 @@ class Plan {
         void addFacility(Facility* facility);
         const string toString() const;
         const string getStatusString() const;
-
+        const int getID() const;
     private:
         int plan_id;
         const Settlement &settlement;
