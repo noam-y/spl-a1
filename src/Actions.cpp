@@ -27,6 +27,8 @@ SimulateStep::SimulateStep(const int numOfSteps):numOfSteps(numOfSteps){}
 // SimulateStep::act(Simulation &simulation) override{
 //     simulation.
 // }
+
+
 AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy):
 settlementName(settlementName),selectionPolicy(selectionPolicy){}
 
