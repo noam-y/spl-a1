@@ -3,6 +3,8 @@ using namespace std;
 #include "../include/Action.h"
 #include "../include/Plan.h"
 #include "../include/Simulation.h"
+#include "../include/selectionPolicy.h"
+
 #include <string>
 
 BaseAction::BaseAction():errorMsg(), status(){}
@@ -20,8 +22,28 @@ const string& BaseAction::getErrorMsg() const{
     return errorMsg;
 }
 
-AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy){
-    vector<FacilityType> f1;
+SimulateStep::SimulateStep(const int numOfSteps):numOfSteps(numOfSteps){}
 
-    //Plan p1 = Plan(Simulation::genPlanID, settlement, selectionPolicy, f1&);
+// SimulateStep::act(Simulation &simulation) override{
+//     simulation.
+// }
+AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy):
+settlementName(settlementName),selectionPolicy(selectionPolicy){}
+
+void AddPlan::act(Simulation &simulation){
+    Settlement stl = simulation.getSettlement(settlementName);
+    SelectionPolicy* selectP = nullptr;
+    if (selectionPolicy == "bal"){
+        selectP = new BalancedSelection(0,0,0);
+    }
+    else if (selectionPolicy == "nav"){
+        selectP = new NaiveSelection();
+    }
+    else if(selectionPolicy == "eco"){
+        selectP = new EconomySelection();
+    }
+    else{
+        selectP = new SustainabilitySelection();
+    }
+    simulation.addPlan(stl, selectP);
 }
