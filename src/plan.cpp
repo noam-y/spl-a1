@@ -18,10 +18,11 @@ life_quality_score(), economy_score(0), environment_score(0), status(PlanStatus:
 
 
 Plan::Plan(const Plan& other):plan_id(other.plan_id), settlement(other.settlement),
-status(other.status),
- facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score),
+status(other.status),facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score),
  economy_score(other.economy_score), environment_score(other.environment_score){
     selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
+    vector<Facility*> facilities; 
+    vector<Facility*> underConstruction;
     for (Facility* fa : other.facilities){
         this->facilities.push_back(new Facility(*fa));
     }
@@ -34,11 +35,11 @@ status(other.status),
 Plan::Plan(Plan&& other):plan_id(other.plan_id), settlement(other.settlement),
 status(other.status), facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score),
  economy_score(other.economy_score), environment_score(other.environment_score){
-    for (Facility* fa : other.facilities){
-        fa = nullptr;
+    for (int i = 0; i <other.facilities.size() ; i++){
+        other.facilities.at(i) = nullptr;
     }
-        for (Facility* fa : other.underConstruction){
-        fa = nullptr;
+    for (int i = 0; i <other.underConstruction.size() ; i++){
+        other.underConstruction.at(i) = nullptr;
     }
     other.selectionPolicy = nullptr;
 
@@ -144,14 +145,15 @@ const string Plan::toString() const{
 
 Plan::~Plan() {
     delete selectionPolicy;
-
-    for (Facility* facility : facilities) {
-        delete facility;
+    
+    for (int i = 0; i <facilities.size() ; i++){
+        delete facilities.at(i);
     }
 
-    for (Facility* facility : underConstruction) {
-        delete facility;
+    for (int i = 0; i <underConstruction.size() ; i++){
+        delete underConstruction.at(i);
     }
+
 }
 
 
