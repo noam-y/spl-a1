@@ -21,7 +21,7 @@ link : bin/main.o bin/Auxiliary.o bin/Simulation.o bin/Settlement.o src/Action.o
 	g++ -o bin/program bin/main.o bin/Auxiliary.o bin/Simulation.o bin/Settlement.o bin/Facility.o bin/FacilityType.o bin/selectionpolicy2.o src/Action.o bin/Plan.o
 
 plan:
-	g++ -c -Wall -g -Iinclude -o bin/Facility.o src/Facility.cpp
+	g++ -c -Wall -g -Iinclude -o bin/Plan.o src/Plan.cpp
 
 run : bin/program
 	bin/program config_file.txt

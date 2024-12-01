@@ -16,6 +16,7 @@ class Plan {
         Plan(const Plan &other);
         Plan(Plan&& other) noexcept; // move constructor
         Plan& operator=(const Plan &other)=delete;
+        ~Plan();
         const int getlifeQualityScore() const;
         const int getEconomyScore() const;
         const int getEnvironmentScore() const;

@@ -9,17 +9,31 @@ using std::vector;
 using namespace std;
 
 
-Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions):
-plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), facilityOptions(facilityOptions),
-life_quality_score(), economy_score(0), environment_score(0), status(PlanStatus::AVALIABLE){
+Plan::Plan(const int planId,
+const Settlement &settlement,
+SelectionPolicy *selectionPolicy, 
+const vector<FacilityType> &facilityOptions):
+plan_id(planId),
+settlement(settlement), 
+selectionPolicy(selectionPolicy), 
+status(PlanStatus::AVALIABLE),
+facilityOptions(facilityOptions),
+life_quality_score(), 
+economy_score(0), 
+environment_score(0) 
+{
     vector<Facility*> facilities; //TODO FIX
     vector<Facility*> underConstruction;
 }
 
 
-Plan::Plan(const Plan& other):plan_id(other.plan_id), settlement(other.settlement),
-status(other.status),facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score),
- economy_score(other.economy_score), environment_score(other.environment_score){
+Plan::Plan(const Plan& other):plan_id(other.plan_id),
+settlement(other.settlement),
+status(other.status),
+facilityOptions(other.facilityOptions),
+life_quality_score(other.life_quality_score),
+economy_score(other.economy_score),
+environment_score(other.environment_score){
     selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
     vector<Facility*> facilities; 
     vector<Facility*> underConstruction;
@@ -32,31 +46,22 @@ status(other.status),facilityOptions(other.facilityOptions), life_quality_score(
     // TODO facilityOptions
  }
 
-Plan::Plan(Plan&& other):plan_id(other.plan_id), settlement(other.settlement),
-status(other.status), facilityOptions(other.facilityOptions), life_quality_score(other.life_quality_score),
- economy_score(other.economy_score), environment_score(other.environment_score){
-    for (int i = 0; i <other.facilities.size() ; i++){
+Plan::Plan(Plan&& other) noexcept:plan_id(other.plan_id),
+settlement(other.settlement),
+status(other.status),
+facilityOptions(other.facilityOptions),
+life_quality_score(other.life_quality_score),
+economy_score(other.economy_score),
+environment_score(other.environment_score){
+    for (int i = 0;  static_cast<std::size_t>(i) <other.facilities.size() ; i++){
         other.facilities.at(i) = nullptr;
     }
-    for (int i = 0; i <other.underConstruction.size() ; i++){
+    for (int i = 0;  static_cast<std::size_t>(i) <other.underConstruction.size() ; i++){
         other.underConstruction.at(i) = nullptr;
     }
     other.selectionPolicy = nullptr;
 
 }
-
-
-    // Plan::Plan& operator=(Plan&& other)
-    // {
-    //     if (this != &other) {
-    //         delete data; // Free existing resource
-    //         data = other.data; // Transfer ownership
-    //         other.data = nullptr; // Nullify source
-    //         cout << "Move assignment called" << endl;
-    //     }
-    //     return *this;
-    // }
-
 
 
 //TODO: COPY CONSTRUCTOR destructor, copy constructor, HALF RULE OF FIVE- EXPLAINED IN FORUM
@@ -132,25 +137,15 @@ const string Plan::toString() const{
     return s;
 }
 
-    // private:
-    //     int plan_id;
-    //     const Settlement &settlement;
-    //     SelectionPolicy *selectionPolicy; //What happens if we change this to a reference?
-    //     PlanStatus status;
-    //     vector<Facility*> facilities;
-    //     vector<Facility*> underConstruction;
-    //     const vector<FacilityType> &facilityOptions;
-    //     int life_quality_score, economy_score, environment_score;
-
 
 Plan::~Plan() {
     delete selectionPolicy;
     
-    for (int i = 0; i <facilities.size() ; i++){
+    for (int i = 0; static_cast<std::size_t>(i) <facilities.size() ; i++){
         delete facilities.at(i);
     }
 
-    for (int i = 0; i <underConstruction.size() ; i++){
+    for (int i = 0; static_cast<std::size_t>(i) <underConstruction.size() ; i++){
         delete underConstruction.at(i);
     }
 
