@@ -126,8 +126,13 @@ Simulation& Simulation::operator=(const Simulation& other) {
     return *this;
 } 
 
-Simulation::Simulation(Simulation&& other) noexcept: isRunning(other.isRunning), planCounter(other.planCounter), plans(std::move(other.plans)), settlements(std::move(other.settlements)),
-facilitiesOptions(std::move(other.facilitiesOptions)), actionsLog(std::move(other.actionsLog)) {
+Simulation::Simulation(Simulation&& other) noexcept: isRunning(other.isRunning),
+planCounter(other.planCounter), 
+actionsLog(std::move(other.actionsLog)),
+plans(std::move(other.plans)), 
+settlements(std::move(other.settlements)),
+facilitiesOptions(std::move(other.facilitiesOptions))
+{
     // Clear other to leave it in a valid state
     other.isRunning = false;
     other.planCounter = 0;
