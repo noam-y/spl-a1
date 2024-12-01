@@ -15,6 +15,7 @@ class Plan {
         Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
         Plan(const Plan &other);
         Plan(Plan&& other) noexcept; // move constructor
+        Plan& operator=(const Plan &other)=delete;
         const int getlifeQualityScore() const;
         const int getEconomyScore() const;
         const int getEnvironmentScore() const;

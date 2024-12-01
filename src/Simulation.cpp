@@ -42,7 +42,7 @@ void Simulation::initializeFile(const std::string &configFilePath) {
             int environmentScore = std::stoi(parsedArgs[6]);
             //checks if the facility allready exist
             bool isExist = false;
-            for (int i =0; i < facilitiesOptions.size(); i++){
+            for (std::size_t i = 0; i < facilitiesOptions.size(); i++){ // TODO UNDERSTAND
                 if (fName == facilitiesOptions[i].getName()){
                     isExist = true;
                 }
@@ -126,7 +126,8 @@ Simulation& Simulation::operator=(const Simulation& other) {
     return *this;
 } 
 
-Simulation::Simulation(Simulation&& other) noexcept: isRunning(other.isRunning), planCounter(other.planCounter), plans(std::move(other.plans)), facilitiesOptions(std::move(other.facilitiesOptions)), settlements(std::move(other.settlements)), actionsLog(std::move(other.actionsLog)) {
+Simulation::Simulation(Simulation&& other) noexcept: isRunning(other.isRunning), planCounter(other.planCounter), plans(std::move(other.plans)), settlements(std::move(other.settlements)),
+facilitiesOptions(std::move(other.facilitiesOptions)), actionsLog(std::move(other.actionsLog)) {
     // Clear other to leave it in a valid state
     other.isRunning = false;
     other.planCounter = 0;
@@ -236,7 +237,7 @@ void Simulation::open()
 void Simulation::  addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy){
         int planID = planCounter;
         planCounter++;
-        Plan p = Plan(planID, &settlement, *selectionPolicy, &facilitiesOptions);
+        Plan p = Plan(planID, settlement, selectionPolicy, facilitiesOptions);
         plans.push_back(p);
  }
 
@@ -284,16 +285,18 @@ bool Simulation:: isSettlementExists(const string &settlementName){
 
 Settlement &Simulation:: getSettlement(const string &settlementName){
     for (Settlement* s : settlements) {
-        if (s ->getName()== settlementName)
-         s->getName();
-         return *s;
+        if (s ->getName()== settlementName){
+            s->getName();
+            return *s;
+        }
+
     }
     // If no settlement is found with the given name, throw an exception or handle the error.
     throw std::runtime_error("No such settlement exists");
 }
 
 Plan &Simulation:: getPlan(const int planID) {
-    for (Plan p : plans){
+    for (Plan& p : plans){
         if (p.getID() == planID){ //NEED EO IMPLEMENT GETID METHOD
             return p;
         }

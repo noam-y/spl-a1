@@ -23,7 +23,7 @@ class Simulation {
         Simulation& operator=(const Simulation& other); // Copy assignment operator
         Simulation(Simulation&& other) noexcept;     // Move constructor
         Simulation& operator=(Simulation&& other) noexcept; // Move assignment operator
-        void Simulation::initializeFile(const std::string &configFilePath); //helper function
+        void initializeFile(const std::string &configFilePath); //helper function
         void start();
         void addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy);
         void addAction(BaseAction *action);
