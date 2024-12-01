@@ -23,7 +23,7 @@ const string& BaseAction::getErrorMsg() const{
 
 SimulateStep::SimulateStep(const int numOfSteps):numOfSteps(numOfSteps){}
 
-// SimulateStep::act(Simulation &simulation) override{
+// SimulateStep::act(Simulation &simulation) {
 //     simulation.
 // }
 

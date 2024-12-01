@@ -1,4 +1,5 @@
 #include "../include/Simulation.h"
+#include "../include/Plan.h"
 
 #include <iostream>
 #include <fstream>
@@ -7,7 +8,7 @@ using namespace std;
 
 Simulation::Simulation(const std::string &configFilePath) : isRunning(false), planCounter(0) {
     std::ifstream configFile(configFilePath);
-    initializeFile(configFilePath) //using helper function
+    initializeFile(configFilePath); //using helper function
 }
 
 void Simulation::initializeFile(const std::string &configFilePath) {
@@ -24,8 +25,8 @@ void Simulation::initializeFile(const std::string &configFilePath) {
             if (parsedArgs[0] == "settlement") {  
             string sName = parsedArgs[1];
             int sTypeInt = std::stoi(parsedArgs[2]);  
-            SettlementType sType = static_cast<SettlementType>(settlementTypeInt);  // Convert int to enum
-            if (isSettlementExists(sName),sType){
+            SettlementType sType = static_cast<SettlementType>(sTypeInt);  // Convert int to enum
+            if (isSettlementExists(sName)){
                 cout <<"Settlement already exist"<< endl;
             }
             settlements.push_back(new Settlement(sName, sType));
@@ -42,12 +43,12 @@ void Simulation::initializeFile(const std::string &configFilePath) {
             //checks if the facility allready exist
             bool isExist = false;
             for (int i =0; i < facilitiesOptions.size(); i++){
-                if (fName == facilitiesOptions[i].getName){
+                if (fName == facilitiesOptions[i].getName()){
                     isExist = true;
                 }
             }
             if (!isExist){
-                <<cout "Facility already exist"<< endl;
+                cout << "Facility already exist"<< endl;
             }
             facilitiesOptions.push_back(FacilityType(fName, fCategory, fPrice, lifeQualityScore, economyScore, environmentScore));
         }
@@ -86,13 +87,13 @@ configFile.close();  // Close the file
 Simulation::~Simulation() {
     //Delete all settlements objects
      for (Settlement* s : settlements) {
-        delete settlement;
+        delete s;
     }
     settlements.clear();
 
     // Delete all BaseAction objects
     for (BaseAction* a : actionsLog) {
-        delete action;
+        delete a;
     }
     actionsLog.clear();
 }
@@ -100,27 +101,27 @@ Simulation::~Simulation() {
 Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),planCounter(other.planCounter),plans(other.plans),facilitiesOptions(other.facilitiesOptions) {
     // Deep copy settlements
     for (const Settlement* s : other.settlements) {
-        settlements.push_back(new Settlement(*settlement));
+        settlements.push_back(new Settlement(*s));
     }
     // Deep copy actions
     for (const BaseAction* a : other.actionsLog) {
-        actionsLog.push_back(action->clone());
+        actionsLog.push_back(a->clone());
     }
 } 
-Simulation::Simulation& operator=(const Simulation& other) {
-    if (this!= other) {
-        ~Simulation(this);
+Simulation& Simulation::operator=(const Simulation& other) {
+    if (this!= &other) {
+        delete(this);
     }
-    this.isRunning= other.isRunning;
-    this.planCounter= other.planCounter;
-    this.plans= other.plans;
-    this.facilitiesOptions= other.facilitiesOptions;
+    isRunning= other.isRunning;
+    planCounter= other.planCounter;
+    plans= other.plans;
+   facilitiesOptions= other.facilitiesOptions;
     //deep dopy:
-    for (const Settlement* s: other.Settlements){
-        this.Settlements.push_back(new Settlement(*settlement));
+    for (const Settlement* s: other.settlements){
+        settlements.push_back(new Settlement(*s));
     }
-    for (const BaseAction a : other.BeseAction){
-        this.BaseAction.push_back(action->clone());
+    for (const BaseAction* a : other.actionsLog){
+        this->actionsLog.push_back(a->clone());
     }
     return *this;
 } 
@@ -133,7 +134,7 @@ Simulation::Simulation(Simulation&& other) noexcept: isRunning(other.isRunning),
 
 Simulation& Simulation::operator=(Simulation&& other) noexcept {
     if (this != &other) { 
-        clearResources(); // Clean up existing resources
+        delete this; // Clean up existing resources
 
         // Transfer ownership
         isRunning = other.isRunning;
@@ -151,10 +152,6 @@ Simulation& Simulation::operator=(Simulation&& other) noexcept {
 }
 
        
-void Simulation::start(){
-    cout << "The simulation has started" << endl;
-}
-
 
 void Simulation::start(){
     open();
@@ -239,7 +236,7 @@ void Simulation::open()
 void Simulation::  addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy){
         int planID = planCounter;
         planCounter++;
-        Plan p = Plan(planID, &settlement, *selectionPolicy, facilitiesOptions); 
+        Plan p = Plan(planID, &settlement, *selectionPolicy, &facilitiesOptions);
         plans.push_back(p);
  }
 
@@ -250,14 +247,16 @@ void Simulation:: addAction(BaseAction *action){
 
 
 bool Simulation:: addSettlement(Settlement *settlement){
-        for (const *settlement s : settlements) {
+        for (const Settlement* s : settlements) {
             if (s->getName() == settlement->getName()) {
                 return false;
                 }
             }
-            *settlement.push_back(settlement);
-            return true;
-        }
+
+        settlements.push_back(settlement);
+        return true;
+
+}
 
 
 bool Simulation:: addFacility(FacilityType facility){
@@ -295,7 +294,7 @@ Settlement &Simulation:: getSettlement(const string &settlementName){
 
 Plan &Simulation:: getPlan(const int planID) {
     for (Plan p : plans){
-        if (p.getID== planID){ //NEED EO IMPLEMENT GETID METHOD
+        if (p.getID() == planID){ //NEED EO IMPLEMENT GETID METHOD
             return p;
         }
 
