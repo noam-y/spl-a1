@@ -53,7 +53,6 @@ int BalancedSelection::balanceDiff(int LifeQualityScore, int EconomyScore, int E
     int d1 = abs(LifeQualityScore - EconomyScore);
     int d2 = std::abs(EconomyScore - EnvironmentScore);
     int d3 = std::abs(LifeQualityScore - EnvironmentScore);
-    int mainDif =d1;
     return std::max({d1, d2, d3});
 }
 
