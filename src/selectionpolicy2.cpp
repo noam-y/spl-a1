@@ -1,6 +1,6 @@
 #include "../include/Facility.h"
 #include "../include/SelectionPolicy.h"
-
+#include <algorithm>
 #include <iostream>
 using namespace std;
 
@@ -53,7 +53,8 @@ int BalancedSelection::balanceDiff(int LifeQualityScore, int EconomyScore, int E
     int d1 = abs(LifeQualityScore - EconomyScore);
     int d2 = std::abs(EconomyScore - EnvironmentScore);
     int d3 = std::abs(LifeQualityScore - EnvironmentScore);
-    return d1 + d2 + d3;
+    int mainDif =d1;
+    return std::max({d1, d2, d3});
 }
 
 const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType> &facilitiesOptions)

@@ -115,7 +115,7 @@ Simulation& Simulation::operator=(const Simulation& other) {
     isRunning= other.isRunning;
     planCounter= other.planCounter;
     plans= other.plans;
-   facilitiesOptions= other.facilitiesOptions;
+    facilitiesOptions= other.facilitiesOptions;
     //deep dopy:
     for (const Settlement* s: other.settlements){
         settlements.push_back(new Settlement(*s));
