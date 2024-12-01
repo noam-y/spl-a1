@@ -18,7 +18,7 @@ const FacilityType &NaiveSelection::selectFacility(const vector<FacilityType> &f
     }
     lastSelectedIndex++;
     // Make it cyclic
-    if (lastSelectedIndex >= facilitiesOptions.size())
+    if (lastSelectedIndex >= (int)facilitiesOptions.size())
     {
         lastSelectedIndex = 0; // Loop back to the first element
     }
@@ -30,7 +30,7 @@ const string NaiveSelection::toString() const
 {
     string s = "";
     // adding every name of the chosen facilities in the list
-    for (int i = 0; i < facilitiesList.size(); i++)
+    for (int i = 0; i < (int)facilitiesList.size(); i++)
     {
         s = s + "," + facilitiesList[i].getName();
     }

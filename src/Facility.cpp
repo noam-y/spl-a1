@@ -25,16 +25,18 @@ using namespace std;
             return timeLeft;
         }
         FacilityStatus Facility::step(){
-            if (timeLeft =0 ){
+            if (timeLeft == 0){
                 setStatus(FacilityStatus::OPERATIONAL);
+                return FacilityStatus::OPERATIONAL;
                 //Plan::addFacility(*this); TODO
             }
             else{
                 timeLeft = timeLeft - 1;
+                return FacilityStatus::UNDER_CONSTRUCTIONS;
             }
-
-            
         }
+
+
         void Facility::setStatus(FacilityStatus status){
             this->status = status;
         }
@@ -42,8 +44,11 @@ using namespace std;
             return status;
         }
         const string Facility::toString() const{
-            cout << "Facility Name: " << getName() << "\n";
-            cout << "Settlement Name: " << getSettlementName() << "\n";
+            string s = "Facility Name: " + getName() + "\n" +
+            "Settlement Name: " + getSettlementName() + "\n";
+            return s;
+
+            //TODO check official tostring guide
         }
 
         const string settlementName;
