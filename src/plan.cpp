@@ -24,7 +24,6 @@ environment_score(0){
     vector<Facility*> facilities; //TODO FIX
     vector<Facility*> underConstruction;
     constructionLimit = settlement.getConstructionLimit();
-
 }
 
 
