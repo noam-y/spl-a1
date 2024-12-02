@@ -20,10 +20,11 @@ status(PlanStatus::AVALIABLE),
 facilityOptions(facilityOptions),
 life_quality_score(), 
 economy_score(0), 
-environment_score(0) 
-{
+environment_score(0){
     vector<Facility*> facilities; //TODO FIX
     vector<Facility*> underConstruction;
+    constructionLimit = settlement.getConstructionLimit();
+
 }
 
 
@@ -33,7 +34,7 @@ status(other.status),
 facilityOptions(other.facilityOptions),
 life_quality_score(other.life_quality_score),
 economy_score(other.economy_score),
-environment_score(other.environment_score){
+environment_score(other.environment_score), constructionLimit(other.constructionLimit){
     selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
     vector<Facility*> facilities; 
     vector<Facility*> underConstruction;
@@ -54,7 +55,8 @@ status(other.status),
 facilityOptions(other.facilityOptions),
 life_quality_score(other.life_quality_score),
 economy_score(other.economy_score),
-environment_score(other.environment_score){
+environment_score(other.environment_score),
+constructionLimit(other.constructionLimit){
     for (int i = 0;  static_cast<std::size_t>(i) <other.facilities.size() ; i++){
         other.facilities.at(i) = nullptr;
     }
@@ -62,8 +64,6 @@ environment_score(other.environment_score){
         other.underConstruction.at(i) = nullptr;
     }
     other.selectionPolicy = nullptr;
-    ConstructionLimit = settlement.getConstructionLimit();
-
 }
 
 
@@ -93,7 +93,7 @@ void Plan::step(){
         FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
         Facility* toBuild = new Facility(typeBuild, settlement.getName());
         addFacility(toBuild);
-        if (ConstructionLimit == 0){
+        if (constructionLimit == 0){
             status = PlanStatus::BUSY;
         }
     }
@@ -102,11 +102,11 @@ void Plan::step(){
         if (f1 == FacilityStatus::OPERATIONAL){
             addFacility(underConstruction.at(i));
             // we now have more space availiable to construction
-            ConstructionLimit = ConstructionLimit + 1;
+            constructionLimit = constructionLimit + 1;
         }
     }
 
-    if (ConstructionLimit == 0){status = PlanStatus::BUSY;}
+    if (constructionLimit == 0){status = PlanStatus::BUSY;}
     else{status = PlanStatus::AVALIABLE;}
 }
 
