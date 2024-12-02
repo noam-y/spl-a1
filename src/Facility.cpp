@@ -17,7 +17,9 @@ using namespace std;
          Facility(settlementName,settlementName,type.getCategory(), type.getCost(), type.getLifeQualityScore(),
          type.getEconomyScore(), type.getEnvironmentScore()){};
 
-
+        Facility* Facility::clone(){
+            return new Facility(*this);
+        }
         const string &Facility::getSettlementName() const{
             return settlementName;
         }

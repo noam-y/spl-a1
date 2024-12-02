@@ -37,11 +37,13 @@ environment_score(other.environment_score){
     selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
     vector<Facility*> facilities; 
     vector<Facility*> underConstruction;
+    vector<FacilityType> facilityOptions;
+    
     for (Facility* fa : other.facilities){
-        this->facilities.push_back(new Facility(*fa));
+        this->facilities.push_back(fa->clone());
     }
     for (Facility* fa : other.underConstruction){
-        this->underConstruction.push_back(new Facility(*fa));
+        this->underConstruction.push_back(fa->clone());
     }
     // TODO facilityOptions
  }
