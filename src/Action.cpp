@@ -109,53 +109,5 @@ void PrintPlanStatus::act(Simulation &simulation){
 PrintPlanStatus * PrintPlanStatus::clone() const{return new PrintPlanStatus(*this);}
 
  const string PrintPlanStatus::toString() const{
-<<<<<<< HEAD
     return "print plan status for plan id:" + to_string(planId);
  }
-=======
-    cout << "print plan status for plan id:" + to_string(planId) << endl;
- }
-
-
-
- ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy):planId(planId), newPolicy(newPolicy){}
-
-void ChangePlanPolicy::act(Simulation &simulation){
-    Plan plan = simulation.getPlan(planId);
-    if(newPolicy == "nve"){plan.setSelectionPolicy(new NaiveSelection());}
-    else if (newPolicy == "eco"){plan.setSelectionPolicy(new EconomySelection());        }
-    else if (newPolicy == "env"){plan.setSelectionPolicy(new SustainabilitySelection());}
-    else if (newPolicy == "bal"){
-        plan.setSelectionPolicy(new BalancedSelection(plan.getlifeQualityScore(),
-        plan.getEconomyScore(),
-        plan.getEnvironmentScore()));
-    }
-
-}
-ChangePlanPolicy *ChangePlanPolicy:: clone() const{return new ChangePlanPolicy(*this);}
-const string ChangePlanPolicy::toString() const{
-    string s = "changing planID" + to_string(planId) + "to policy" + newPolicy;
-}
-
-
-PrintActionsLog::PrintActionsLog(){}
-void act(Simulation &simulation) {
-    //TODO
-}
-PrintActionsLog *PrintActionsLog::clone() const{
-    return new PrintActionsLog(*this);
-}
-const string PrintActionsLog::toString() const{return "actions log";} //TODO
-
-Close::Close(){}
-void Close::act(Simulation &simulation){
-    simulation.close();
-}
-
-Close *Close::clone() const{return new Close(*this);}
-const string Close::toString() const{return "closing simulation ";}
-
-BackupSimulation::BackupSimulation(){}
- void BackupSimulation::act(Simulation &simulation){
- }
->>>>>>> 950d9e2afbcc9bcddb99364dd009ef878ac9d73d
