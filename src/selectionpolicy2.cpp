@@ -60,7 +60,6 @@ const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType>
 {
     int bestIndex = 0;
     int totalDifff = INT32_MAX; // max difference possible
-    int curr;
     int currIndex=0;
     for (FacilityType facility : facilitiesOptions)
     {

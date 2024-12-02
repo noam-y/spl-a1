@@ -56,3 +56,40 @@ void AddSettlement::act(Simulation &simulation) {
     Settlement stl = Settlement(settlementName,settlementType);
     simulation.addSettlement(&stl);
 }
+
+AddSettlement* AddSettlement::clone() const {
+     return new AddSettlement(*this); 
+}
+
+AddFacility::AddFacility(const string &facilityName,
+ const FacilityCategory facilityCategory, 
+ const int price, const int lifeQualityScore, 
+ const int economyScore, const int environmentScore):facilityName(facilityName),
+ facilityCategory(facilityCategory), price(price), lifeQualityScore(lifeQualityScore),
+ economyScore(economyScore), environmentScore(environmentScore){}
+
+void AddFacility::act(Simulation& simulation) {
+    FacilityType f(facilityName, facilityCategory, price, lifeQualityScore,
+                    economyScore, environmentScore);
+    bool status = simulation.addFacility(f);
+    // TODO
+}
+
+AddFacility* AddFacility::clone() const {
+     return new AddFacility(*this); 
+}
+
+
+
+PrintPlanStatus::PrintPlanStatus(int planID):planId(planID){}
+
+void PrintPlanStatus::act(Simulation &simulation){
+    Plan plan = simulation.getPlan(planId);
+    cout << plan.toString() <<endl;
+}
+
+PrintPlanStatus * PrintPlanStatus::clone() const{return new PrintPlanStatus(*this);}
+
+ const string PrintPlanStatus::toString() const{
+    cout << "print plan status for plan id:" + to_string(planId) << endl;
+ }
