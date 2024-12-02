@@ -28,6 +28,7 @@ class Plan {
         const string toString() const;
         const string getStatusString() const;
         const int getID() const;
+        const vector<FacilityType> getFacilityOptions() const;
     private:
         int plan_id;
         const Settlement &settlement;
@@ -37,4 +38,5 @@ class Plan {
         vector<Facility*> underConstruction;
         const vector<FacilityType> &facilityOptions;
         int life_quality_score, economy_score, environment_score;
+        int ConstructionLeft;
 };

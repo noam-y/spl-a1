@@ -88,6 +88,14 @@ void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
 
 
 void Plan::step(){
+    while (status == PlanStatus::AVALIABLE){
+        FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
+        Facility* toBuild = new Facility(typeBuild, settlement.getName());
+        addFacility(toBuild);
+        if (ConstructionLeft == 0){
+            status = PlanStatus::BUSY;
+        }
+    }
     for (Facility* facility : underConstruction) {
         FacilityStatus f1 = facility->step();
         if (f1 == FacilityStatus::OPERATIONAL){

@@ -370,9 +370,9 @@ Plan &Simulation:: getPlan(const int planID) {
 }
 void Simulation:: step(){
     for (int i = 0; i < planCounter; i++){
-                plans[i].step();
-            }
+        plans[i].step();
     }
+}
 
 void Simulation:: close(){
     isRunning = false;
