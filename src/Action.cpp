@@ -27,6 +27,7 @@ SimulateStep::SimulateStep(const int numOfSteps):numOfSteps(numOfSteps){}
     for (int i = 0; i < numOfSteps; i++){
         simulation.step();
     }
+    complete();
  }
 
 const string SimulateStep::toString() const{return "moving " + to_string(numOfSteps) + " steps";}
@@ -43,16 +44,20 @@ void AddPlan::act(Simulation &simulation){
     if (selectionPolicy == "bal"){
         selectP = new BalancedSelection(0,0,0);
     }
-    else if (selectionPolicy == "nav"){
+    else if (selectionPolicy == "nve"){
         selectP = new NaiveSelection();
     }
     else if(selectionPolicy == "eco"){
         selectP = new EconomySelection();
     }
-    else{
+    else if(selectionPolicy == "env"){
         selectP = new SustainabilitySelection();
     }
+    else{
+        error("selectionPolicyDoes not exist");
+    }
     simulation.addPlan(stl, selectP);
+    complete();
 }
 
 AddSettlement::AddSettlement(const string &settlementName,SettlementType settlementType):
@@ -60,7 +65,9 @@ settlementName(settlementName), settlementType(settlementType){}
 
 void AddSettlement::act(Simulation &simulation) {
     Settlement stl = Settlement(settlementName,settlementType);
-    simulation.addSettlement(&stl);
+    bool status = simulation.addSettlement(&stl);
+    if (status){complete();}
+    else{error("action AddSettlement not complete");}
 }
 
 AddSettlement* AddSettlement::clone() const {
@@ -81,7 +88,8 @@ void AddFacility::act(Simulation& simulation) {
     FacilityType f(facilityName, facilityCategory, price, lifeQualityScore,
                     economyScore, environmentScore);
     bool status = simulation.addFacility(f);
-    // TODO
+    if (status){complete();}
+    else{error("action addFacility not complete");}
 }
 
 AddFacility* AddFacility::clone() const {
@@ -104,6 +112,7 @@ PrintPlanStatus::PrintPlanStatus(int planID):planId(planID){}
 void PrintPlanStatus::act(Simulation &simulation){
     Plan plan = simulation.getPlan(planId);
     cout << plan.toString() <<endl;
+    complete();
 }
 
 PrintPlanStatus * PrintPlanStatus::clone() const{return new PrintPlanStatus(*this);}
@@ -120,28 +129,30 @@ PrintPlanStatus * PrintPlanStatus::clone() const{return new PrintPlanStatus(*thi
     if (newPolicy == "bal"){
         p.setSelectionPolicy(new BalancedSelection(0,0,0));
     }
-    else if (newPolicy == "nav"){
+    else if (newPolicy == "nve"){
         p.setSelectionPolicy( new NaiveSelection());
     }
     else if(newPolicy == "eco"){
         p.setSelectionPolicy(new EconomySelection());
     }
-    else if(newPolicy == "eco"){
+    else if(newPolicy == "env"){
         p.setSelectionPolicy(new SustainabilitySelection());
     }
     else{
-        cout<< "no selection given- ERROR" << endl;
+        error( "no selection given- ERROR" );
     }
+    complete();
  }
 
 ChangePlanPolicy *ChangePlanPolicy::clone() const{return new ChangePlanPolicy(*this);}
 const string ChangePlanPolicy::toString() const{return "Change policy for id" + to_string(planId) + "policy" + newPolicy;}
 
 PrintActionsLog::PrintActionsLog(){}
-void act(Simulation &simulation){
+void PrintActionsLog::act(Simulation &simulation){
     for (BaseAction* a : simulation.getActionsLog()){
         cout << a->toString() << endl;
     }
+    complete();
 }
 
 PrintActionsLog *PrintActionsLog::clone() const{return new PrintActionsLog(*this);}
@@ -150,6 +161,7 @@ const string PrintActionsLog::toString() const{return "printing action log";}
 Close::Close(){}
 void Close::act(Simulation &simulation){
     simulation.close();
+    complete();
 }
 Close *Close::clone() const{return new Close(*this);}
-const string Close::toString() const{return "Closing program";}
+const string Close::toString() const{return "Closing Program, goodbye!";}
