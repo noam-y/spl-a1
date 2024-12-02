@@ -91,5 +91,5 @@ void PrintPlanStatus::act(Simulation &simulation){
 PrintPlanStatus * PrintPlanStatus::clone() const{return new PrintPlanStatus(*this);}
 
  const string PrintPlanStatus::toString() const{
-    cout << "print plan status for plan id:" + to_string(planId) << endl;
+    return "print plan status for plan id:" + to_string(planId);
  }
