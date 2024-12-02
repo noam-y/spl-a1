@@ -3,7 +3,7 @@
 #include "../include/Plan.h"
 #include "../include/SelectionPolicy.h"
 #include <iostream>
-
+extern Simulation* backup;
 using namespace std;
 
 BaseAction::BaseAction():errorMsg(), status(){}
@@ -111,3 +111,54 @@ PrintPlanStatus * PrintPlanStatus::clone() const{return new PrintPlanStatus(*thi
  const string PrintPlanStatus::toString() const{
     return "print plan status for plan id:" + to_string(planId);
  }
+
+
+
+BackupSimulation:: BackupSimulation() {}
+
+void BackupSimulation:: act(Simulation &simulation) {
+    // Delete the previous backup if exists
+    if (backup != nullptr) {
+        delete backup;
+        backup = nullptr;
+    }
+
+    // Create a deep copy of the current simulation
+    backup = new Simulation(simulation); 
+
+    complete();
+}
+
+
+BackupSimulation *BackupSimulation::clone() const {
+    return new BackupSimulation();
+}
+
+const  string BackupSimulation:: toString() const {
+      return "backup: " + to_string();
+
+}
+
+
+RestoreSimulation:: RestoreSimulation(){}
+
+void RestoreSimulation:: act(Simulation &simulation) {
+    if (backup == nullptr) {
+        error("No backup available");
+        cout << getErrorMsg() << endl;
+    }
+    else {
+        simulation = *backup;
+        complete();
+
+    }
+
+}
+
+RestoreSimulation *RestoreSimulation::clone() const {
+    return new RestoreSimulation();
+}
+
+const string RestoreSimulation:: toString() const {}
+  
+
