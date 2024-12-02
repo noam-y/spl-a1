@@ -98,60 +98,88 @@ Simulation::~Simulation() {
     actionsLog.clear();
 }
 
-Simulation::Simulation(const Simulation& other): 
-isRunning(other.isRunning),
-planCounter(other.planCounter),
-//TODO - ADD PLANS INITIALIZER?
-facilitiesOptions(other.facilitiesOptions) {
-    // Deep copy plan, since it has resources.
+
+
+
+Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),                   
+      planCounter(other.planCounter),               
+      actionsLog(),                                
+      plans(other.plans),                          
+      settlements(),                                
+      facilitiesOptions(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) {  
+    // Deep copy settlements
+    for (const Settlement* s : other.settlements) {
+        settlements.push_back(new Settlement(*s)); // Deep copy each settlement
+    }
+
+        // Deep copy plan, since it has resources.
     for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size() ; i++){
         plans.push_back(other.plans.at(i));
     }
-    // Deep copy settlements
-    for (const Settlement* s : other.settlements) {
-        settlements.push_back(new Settlement(*s));
-    }
+
     // Deep copy actions
     for (const BaseAction* a : other.actionsLog) {
-        actionsLog.push_back(a->clone());
+        actionsLog.push_back(a->clone()); // Clone each action
     }
-} 
+}
+
+
 Simulation& Simulation::operator=(const Simulation& other) {
     if (this!= &other) {
-        delete(this);
+        // Clean the existing resources
+        for (Settlement* s : settlements) {
+            delete s;
+        }
+        settlements.clear();
 
-        isRunning= other.isRunning;
-        planCounter= other.planCounter;
-        plans= other.plans;
-        facilitiesOptions= other.facilitiesOptions;
-        //deep dopy:
-        for (const Settlement* s: other.settlements){
-            settlements.push_back(new Settlement(*s));
+        for (BaseAction* a : actionsLog) {
+            delete a;
         }
-        for (const BaseAction* a : other.actionsLog){
-           this->actionsLog.push_back(a->clone());
-        }
-        return *this;
-        }
-
+        actionsLog.clear();
+    }
+    isRunning= other.isRunning;
+    planCounter= other.planCounter;
+    plans= other.plans;
+    facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
+    //deep dopy:
+    for (const Settlement* s: other.settlements){
+        settlements.push_back(new Settlement(*s));
+    }
+    for (const BaseAction* a : other.actionsLog){
+        this->actionsLog.push_back(a->clone());
+    }
+    return *this;
 } 
 
-Simulation::Simulation(Simulation&& other) noexcept: isRunning(other.isRunning),
-planCounter(other.planCounter), 
-actionsLog(std::move(other.actionsLog)),
-plans(std::move(other.plans)), 
-settlements(std::move(other.settlements)),
-facilitiesOptions(std::move(other.facilitiesOptions))
-{
-    // Clear other to leave it in a valid state
+Simulation::Simulation(Simulation&& other) noexcept : isRunning(other.isRunning),
+      planCounter(other.planCounter),
+      plans(std::move(other.plans)),
+      settlements(std::move(other.settlements)),
+      actionsLog(std::move(other.actionsLog)),
+      facilitiesOptions(std::move(other.facilitiesOptions)) {
+    // Leave the moved-from object in a valid state
     other.isRunning = false;
     other.planCounter = 0;
+
+    // Clear moved-from object's pointers to prevent accidental deletions
+    other.settlements.clear();
+    other.actionsLog.clear();
+
 }   
 
 Simulation& Simulation::operator=(Simulation&& other) noexcept {
-    if (this != &other) { 
-        //delete this; // Clean up existing resources
-        clear();
+    if (this!= &other) {
+        // Clean the existing resources
+        for (Settlement* s : settlements) {
+            delete s;
+        }
+        settlements.clear();
+
+        for (BaseAction* a : actionsLog) {
+            delete a;
+        }
+        actionsLog.clear();
+    
         // Transfer ownership
         isRunning = other.isRunning;
         planCounter = other.planCounter;
@@ -337,23 +365,4 @@ void Simulation:: close(){
     isRunning = false;
 }
 
-
-void Simulation::clear(){
-    for(BaseAction *action : actionsLog){
-            delete action;
-        }
-        actionsLog.clear();
-
-        //plans
-        for(Plan plan : plans){
-            delete &plan;
-        }
-        plans.clear();
-
-        //settlements:
-        for(Settlement *settlement : settlements){
-            delete settlement;
-        }
-        settlements.clear();
-}
 

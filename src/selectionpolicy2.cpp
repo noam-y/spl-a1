@@ -58,17 +58,25 @@ int BalancedSelection::balanceDiff(int LifeQualityScore, int EconomyScore, int E
 
 const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
-    const FacilityType *bestFa = nullptr;
+    int bestIndex = 0;
     int totalDifff = INT32_MAX; // max difference possible
-    for (const FacilityType &facility : facilitiesOptions)
+    int curr;
+    int currIndex=0;
+    for (FacilityType facility : facilitiesOptions)
     {
         int curr = balanceDiff(facility.getLifeQualityScore(), facility.getEconomyScore(), facility.getEnvironmentScore());
         if (curr < totalDifff)
         {
-            bestFa = &facility;
+           totalDifff=curr;
+           bestIndex=currIndex;
         }
+        currIndex ++;
     }
-    return *bestFa;
+    LifeQualityScore = LifeQualityScore + facilitiesOptions.at(bestIndex).getLifeQualityScore();
+    EconomyScore = EconomyScore + facilitiesOptions.at(bestIndex).getEconomyScore();
+    EnvironmentScore = EnvironmentScore + facilitiesOptions.at(bestIndex).getEnvironmentScore();
+    const FacilityType& BestFacility = facilitiesOptions.at(bestIndex);
+    return BestFacility;
 }
 
 // Implement with  3 scores
