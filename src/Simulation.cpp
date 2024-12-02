@@ -1,5 +1,6 @@
 #include "../include/Simulation.h"
 #include "../include/Plan.h"
+#include "../include/Action.h"
 
 #include <iostream>
 #include <fstream>
@@ -103,18 +104,18 @@ Simulation::~Simulation() {
 
 Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),                   
       planCounter(other.planCounter),               
-      actionsLog(),                                
-      plans(other.plans),                          
+      actionsLog(),                                                        
       settlements(),                                
       facilitiesOptions(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) {  
+    vector<Plan> plans;
     // Deep copy settlements
     for (const Settlement* s : other.settlements) {
         settlements.push_back(new Settlement(*s)); // Deep copy each settlement
     }
 
         // Deep copy plan, since it has resources.
-    for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size() ; i++){
-        plans.push_back(other.plans.at(i));
+    for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
+        plans.push_back(Plan(other.plans.at(i)));
     }
 
     // Deep copy actions
@@ -136,10 +137,13 @@ Simulation& Simulation::operator=(const Simulation& other) {
             delete a;
         }
         actionsLog.clear();
-    }
+
     isRunning= other.isRunning;
     planCounter= other.planCounter;
-    plans= other.plans;
+    vector<Plan> plans;
+    for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
+        plans.push_back(Plan(other.plans.at(i)));
+    }
     facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
     //deep dopy:
     for (const Settlement* s: other.settlements){
@@ -149,14 +153,19 @@ Simulation& Simulation::operator=(const Simulation& other) {
         this->actionsLog.push_back(a->clone());
     }
     return *this;
+    }
+
 } 
 
 Simulation::Simulation(Simulation&& other) noexcept : isRunning(other.isRunning),
       planCounter(other.planCounter),
-      plans(std::move(other.plans)),
-      settlements(std::move(other.settlements)),
       actionsLog(std::move(other.actionsLog)),
+      settlements(std::move(other.settlements)),
       facilitiesOptions(std::move(other.facilitiesOptions)) {
+    vector<Plan> plans;
+    for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
+        plans.push_back(Plan(other.plans.at(i)));
+    }
     // Leave the moved-from object in a valid state
     other.isRunning = false;
     other.planCounter = 0;
@@ -183,11 +192,15 @@ Simulation& Simulation::operator=(Simulation&& other) noexcept {
         // Transfer ownership
         isRunning = other.isRunning;
         planCounter = other.planCounter;
-        actionsLog = other.actionsLog;
         settlements = other.settlements;
-        plans =other.plans;
-        for(Plan plan : other.plans){
-            plan.setSelectionPolicy(nullptr);
+        actionsLog = other.actionsLog;
+        vector<Plan> plans;
+        for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
+            plans.push_back(Plan(other.plans.at(i)));
+        }
+        vector<FacilityType> facilitiesOptions;
+        for (int i = 0;  static_cast<std::size_t>(i) <other.facilitiesOptions.size() ; i++){
+             facilitiesOptions.push_back(other.facilitiesOptions.at(i));
         }
         facilitiesOptions = std::move(other.facilitiesOptions);
         for (int i = 0;  static_cast<std::size_t>(i) <other.actionsLog.size() ; i++){

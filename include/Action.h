@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+using namespace std; 
 //#include "Simulation.h"
 enum class SettlementType;
 enum class FacilityCategory;
