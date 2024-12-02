@@ -62,6 +62,7 @@ environment_score(other.environment_score){
         other.underConstruction.at(i) = nullptr;
     }
     other.selectionPolicy = nullptr;
+    ConstructionLimit = settlement.getConstructionLimit();
 
 }
 
@@ -92,16 +93,21 @@ void Plan::step(){
         FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
         Facility* toBuild = new Facility(typeBuild, settlement.getName());
         addFacility(toBuild);
-        if (ConstructionLeft == 0){
+        if (ConstructionLimit == 0){
             status = PlanStatus::BUSY;
         }
     }
-    for (Facility* facility : underConstruction) {
-        FacilityStatus f1 = facility->step();
+    for (std::size_t i = 0; i< underConstruction.size(); i++){
+        FacilityStatus f1 = underConstruction.at(i)->step();
         if (f1 == FacilityStatus::OPERATIONAL){
-            addFacility(facility);
+            addFacility(underConstruction.at(i));
+            // we now have more space availiable to construction
+            ConstructionLimit = ConstructionLimit + 1;
         }
     }
+
+    if (ConstructionLimit == 0){status = PlanStatus::BUSY;}
+    else{status = PlanStatus::AVALIABLE;}
 }
 
 
