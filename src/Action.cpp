@@ -80,7 +80,7 @@ AddFacility::AddFacility(const string &facilityName,
 void AddFacility::act(Simulation& simulation) {
     FacilityType f(facilityName, facilityCategory, price, lifeQualityScore,
                     economyScore, environmentScore);
-    bool status = simulation.addFacility(f);
+    //bool status = simulation.addFacility(f);
     // TODO
 }
 
