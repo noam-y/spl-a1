@@ -98,7 +98,15 @@ Simulation::~Simulation() {
     actionsLog.clear();
 }
 
-Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),planCounter(other.planCounter),plans(other.plans),facilitiesOptions(other.facilitiesOptions) {
+Simulation::Simulation(const Simulation& other): 
+isRunning(other.isRunning),
+planCounter(other.planCounter),
+//TODO - ADD PLANS INITIALIZER?
+facilitiesOptions(other.facilitiesOptions) {
+    // Deep copy plan, since it has resources.
+    for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size() ; i++){
+        plans.push_back(other.plans.at(i));
+    }
     // Deep copy settlements
     for (const Settlement* s : other.settlements) {
         settlements.push_back(new Settlement(*s));
@@ -111,19 +119,21 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),plan
 Simulation& Simulation::operator=(const Simulation& other) {
     if (this!= &other) {
         delete(this);
-    }
-    isRunning= other.isRunning;
-    planCounter= other.planCounter;
-    plans= other.plans;
-    facilitiesOptions= other.facilitiesOptions;
-    //deep dopy:
-    for (const Settlement* s: other.settlements){
-        settlements.push_back(new Settlement(*s));
-    }
-    for (const BaseAction* a : other.actionsLog){
-        this->actionsLog.push_back(a->clone());
-    }
-    return *this;
+
+        isRunning= other.isRunning;
+        planCounter= other.planCounter;
+        plans= other.plans;
+        facilitiesOptions= other.facilitiesOptions;
+        //deep dopy:
+        for (const Settlement* s: other.settlements){
+            settlements.push_back(new Settlement(*s));
+        }
+        for (const BaseAction* a : other.actionsLog){
+           this->actionsLog.push_back(a->clone());
+        }
+        return *this;
+        }
+
 } 
 
 Simulation::Simulation(Simulation&& other) noexcept: isRunning(other.isRunning),
@@ -140,15 +150,22 @@ facilitiesOptions(std::move(other.facilitiesOptions))
 
 Simulation& Simulation::operator=(Simulation&& other) noexcept {
     if (this != &other) { 
-        delete this; // Clean up existing resources
-
+        //delete this; // Clean up existing resources
+        clear();
         // Transfer ownership
         isRunning = other.isRunning;
         planCounter = other.planCounter;
-        plans = std::move(other.plans);
+        actionsLog = other.actionsLog;
+        settlements = other.settlements;
+        plans =other.plans;
+        for(Plan plan : other.plans){
+            plan.setSelectionPolicy(nullptr);
+        }
         facilitiesOptions = std::move(other.facilitiesOptions);
-        settlements = std::move(other.settlements);
-        actionsLog = std::move(other.actionsLog);
+        for (int i = 0;  static_cast<std::size_t>(i) <other.actionsLog.size() ; i++){
+            other.actionsLog.at(i) = nullptr;
+        }
+
 
         // Clear other to leave it in a valid state
         other.isRunning = false;
@@ -318,5 +335,25 @@ void Simulation:: step(){
 
 void Simulation:: close(){
     isRunning = false;
+}
+
+
+void Simulation::clear(){
+    for(BaseAction *action : actionsLog){
+            delete action;
+        }
+        actionsLog.clear();
+
+        //plans
+        for(Plan plan : plans){
+            delete &plan;
+        }
+        plans.clear();
+
+        //settlements:
+        for(Settlement *settlement : settlements){
+            delete settlement;
+        }
+        settlements.clear();
 }
 

@@ -39,11 +39,11 @@ environment_score(other.environment_score){
     vector<Facility*> underConstruction;
     vector<FacilityType> facilityOptions;
     
-    for (Facility* fa : other.facilities){
-        this->facilities.push_back(fa->clone());
+    for (int i = 0;  static_cast<std::size_t>(i) <other.facilities.size() ; i++){
+        this->facilities.push_back(other.facilities.at(i)->clone());
     }
-    for (Facility* fa : other.underConstruction){
-        this->underConstruction.push_back(fa->clone());
+    for (int i = 0;  static_cast<std::size_t>(i) <other.underConstruction.size() ; i++){
+        this->underConstruction.push_back(other.underConstruction.at(i)->clone());
     }
     // TODO facilityOptions
  }
