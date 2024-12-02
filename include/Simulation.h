@@ -36,6 +36,7 @@ class Simulation {
         void close();
         void open();
         void clear();
+        vector<BaseAction*> getActionsLog();
 
     private:
         bool isRunning;

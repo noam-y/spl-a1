@@ -381,4 +381,4 @@ void Simulation:: close(){
     isRunning = false;
 }
 
-
+vector<BaseAction*> Simulation::getActionsLog(){return actionsLog;}
