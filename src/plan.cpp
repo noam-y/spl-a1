@@ -1,4 +1,4 @@
-#pragma once
+
 #include <vector>
 #include "../include/Plan.h"
 #include "../include/Settlement.h"

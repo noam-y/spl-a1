@@ -109,6 +109,10 @@ void PrintPlanStatus::act(Simulation &simulation){
 PrintPlanStatus * PrintPlanStatus::clone() const{return new PrintPlanStatus(*this);}
 
  const string PrintPlanStatus::toString() const{
+<<<<<<< HEAD
+    return "print plan status for plan id:" + to_string(planId);
+ }
+=======
     cout << "print plan status for plan id:" + to_string(planId) << endl;
  }
 
@@ -154,3 +158,4 @@ const string Close::toString() const{return "closing simulation ";}
 BackupSimulation::BackupSimulation(){}
  void BackupSimulation::act(Simulation &simulation){
  }
+>>>>>>> 950d9e2afbcc9bcddb99364dd009ef878ac9d73d

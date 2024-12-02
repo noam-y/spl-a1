@@ -1,7 +1,9 @@
 #include "../include/Simulation.h"
 #include "../include/Plan.h"
 #include "../include/Action.h"
-
+#include "../include/Facility.h"
+#include "../include/SelectionPolicy.h"
+#include "../include/Auxiliary.h"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -126,34 +128,35 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),
 
 
 Simulation& Simulation::operator=(const Simulation& other) {
-    if (this!= &other) {
-        // Clean the existing resources
-        for (Settlement* s : settlements) {
-            delete s;
-        }
-        settlements.clear();
+        if (this!= &other) {
+            // Clean the existing resources
+            for (Settlement* s : settlements) {
+                delete s;
+            }
+            settlements.clear();
 
-        for (BaseAction* a : actionsLog) {
-            delete a;
-        }
-        actionsLog.clear();
+            for (BaseAction* a : actionsLog) {
+                delete a;
+            }
+            actionsLog.clear();
 
-    isRunning= other.isRunning;
-    planCounter= other.planCounter;
-    vector<Plan> plans;
-    for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
-        plans.push_back(Plan(other.plans.at(i)));
+        isRunning= other.isRunning;
+        planCounter= other.planCounter;
+        vector<Plan> plans;
+        for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
+            plans.push_back(Plan(other.plans.at(i)));
+        }
+        facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
+        //deep dopy:
+        for (const Settlement* s: other.settlements){
+            settlements.push_back(new Settlement(*s));
+        }
+        for (const BaseAction* a : other.actionsLog){
+            this->actionsLog.push_back(a->clone());
+        }
+   
     }
-    facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
-    //deep dopy:
-    for (const Settlement* s: other.settlements){
-        settlements.push_back(new Settlement(*s));
-    }
-    for (const BaseAction* a : other.actionsLog){
-        this->actionsLog.push_back(a->clone());
-    }
-    return *this;
-    }
+     return *this;
 
 } 
 
