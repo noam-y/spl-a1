@@ -165,3 +165,59 @@ void Close::act(Simulation &simulation){
 }
 Close *Close::clone() const{return new Close(*this);}
 const string Close::toString() const{return "Closing Program, goodbye!";}
+
+
+BackupSimulation:: BackupSimulation() {}
+
+void BackupSimulation:: act(Simulation &simulation) {
+    // Delete the previous backup if exists
+    if (backup != nullptr) {
+        delete backup;
+        backup = nullptr;
+    }
+
+    // Create a deep copy of the current simulation
+    backup = new Simulation(simulation); 
+
+    complete();
+}
+
+
+BackupSimulation *BackupSimulation::clone() const {
+    return new BackupSimulation(*this);
+}
+
+const  string BackupSimulation:: toString() const {
+      return "backup COMPLITED"; // ADD A HELPER FUNCTION?
+
+}
+
+
+RestoreSimulation:: RestoreSimulation(){}
+
+void RestoreSimulation:: act(Simulation &simulation) {
+    if (backup == nullptr) {
+        error("No backup available");
+        cout << getErrorMsg() << endl;
+    }
+    else {
+        simulation = *backup;
+        complete();
+
+    }
+
+}
+
+RestoreSimulation *RestoreSimulation::clone() const {
+    return new RestoreSimulation(*this) ;
+}
+
+const string RestoreSimulation:: toString() const {
+    if (getStatus() == ActionStatus::COMPLETED) {
+        return "restore COMPLETED";
+    } else if (getStatus() == ActionStatus::ERROR) {
+        return "restore ERROR";
+    } else {
+        return "restore Unknown";
+        }
+}

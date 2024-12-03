@@ -57,18 +57,18 @@ void Simulation::initializeFile(const std::string &configFilePath) {
         }
         //Parsing plan
         else if (parsedArgs[0] == "plan") {
-        SelectionPolicy* policy = nullptr;
+        SelectionPolicy* currPolicy = nullptr;
             if (parsedArgs[2] == "bal") {
-                policy = new BalancedSelection(0,0,0);  
+                currPolicy = new BalancedSelection(0,0,0);  
             } 
-            else if (parsedArgs[2]== "env") {
-                policy = new SustainabilitySelection ();
+            else if (parsedArgs[2]== "eco") {
+                currPolicy = new SustainabilitySelection ();
             }
-            else if (parsedArgs[2] == "eco") {
-                policy = new EconomySelection();  
+            else if (parsedArgs[2] == "env") {
+                currPolicy = new EconomySelection();  
             } 
             else {
-                    policy = new NaiveSelection();  
+                    currPolicy = new NaiveSelection();  
             }
             Settlement* sName = nullptr;
             for (auto& s : settlements) {
@@ -77,12 +77,12 @@ void Simulation::initializeFile(const std::string &configFilePath) {
                     break;
                 }
             }
-            plans.push_back(Plan(planCounter, *sName, policy, facilitiesOptions));
+            plans.push_back(Plan(planCounter, *sName, currPolicy, facilitiesOptions));
             planCounter++;
         }
                 
     }
-configFile.close();  // Close the file
+configFile.close();  // Close the file
 }
 
 
@@ -230,46 +230,48 @@ void Simulation::start(){
         vector<string> arguments = Auxiliary:: parseArguments(command);
                 const string &requestedAction = arguments[0];
                 // checking commands
-                if(requestedAction == "plan"){                    
-                    const string& settlementName = arguments[1];
-                    const string& selectionPolicy = arguments[2];
-                    action = new AddPlan(settlementName, selectionPolicy);                    
-                }
-                else if(requestedAction == "step"){
+                if(requestedAction == "step"){
                     action = new SimulateStep(std::stoi(arguments[1]));
                 }
-                else if(requestedAction == "settlement")
-                {
-                    const string& settlementName = arguments[1];
-                    switch (std:: stoi(arguments[2])){
-                        case 0: action = new AddSettlement(settlementName, SettlementType::VILLAGE );
-                            break;
-                        case 1: action = new AddSettlement(settlementName, SettlementType::CITY );
-                            break;
-                        case 2: action = new AddSettlement(settlementName, SettlementType::METROPOLIS );
-                            break;
-                        default: throw std::runtime_error("Settlement not found");
-                    }                    
+                else if (requestedAction == "settlement"){
+                const string& sName = arguments[1];
+                static const SettlementType settlementTypesArray[] = {
+                    SettlementType::VILLAGE, SettlementType::CITY, SettlementType::METROPOLIS
+                };
+
+                int sIndex = std::stoi(arguments[2]);
+                int s = sizeof(settlementTypesArray) / sizeof(settlementTypesArray[0]);
+                if (sIndex >= 0 && sIndex < s) {
+                    action = new AddSettlement(sName, settlementTypesArray[sIndex]);
+                } else {
+                    throw std::runtime_error("Invalid settlement type");
+    }
                 }
                 else if(requestedAction == "facility")
                 {
-                    string facilityName = arguments[1];
+                    string fName = arguments[1];
                     int categoryInt = std::stoi(arguments[2]);  // Convert string to integer
                     FacilityCategory category = static_cast<FacilityCategory>(categoryInt);
                     int price = std::stoi(arguments[3]);
                     int lifeQualityScore = std::stoi(arguments[4]);
                     int economyScore = std::stoi(arguments[5]);
                     int environmentScore = std::stoi(arguments[6]);
-                    action = new AddFacility(facilityName, category, price, lifeQualityScore, economyScore,environmentScore);
+                    action = new AddFacility(fName, category, price, lifeQualityScore, economyScore,environmentScore);
                 }
+                else if(requestedAction == "plan"){                    
+                    const string& sName = arguments[1];
+                    const string& selectionPolicy = arguments[2];
+                    action = new AddPlan(sName, selectionPolicy);                    
+                }
+                
                 else if(requestedAction == "planstatus")
                 {
                     action = new PrintPlanStatus(std::stoi(arguments[1]));
                 }
                 else if(requestedAction == "changeplanpolicy")
                 {
-                    ChangePlanPolicy* change = new ChangePlanPolicy(std::stoi(arguments[1]),arguments[2]);
-                    action = change;
+                    ChangePlanPolicy* planPolicyChange = new ChangePlanPolicy(std::stoi(arguments[1]),arguments[2]);
+                    action = planPolicyChange;
                 }
                 else if(requestedAction == "log")
                 {
@@ -291,7 +293,6 @@ void Simulation::start(){
                 actionsLog.push_back(action);
             } 
         }
-
 
 
 void Simulation::open()
