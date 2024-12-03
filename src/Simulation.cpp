@@ -51,9 +51,13 @@ void Simulation::initializeFile(const std::string &configFilePath) {
                 }
             }
             if (!isExist){
-                cout << "Facility already exist rising for simulation initfile"<< endl;
+                cout << "Facility is being created"<< endl;
+                facilitiesOptions.push_back(FacilityType(fName, fCategory, fPrice, lifeQualityScore, economyScore, environmentScore));
             }
-            facilitiesOptions.push_back(FacilityType(fName, fCategory, fPrice, lifeQualityScore, economyScore, environmentScore));
+            else{
+                cout << "facility exists" <<endl;
+            }
+            
         }
         //Parsing plan
         else if (parsedArgs[0] == "plan") {
@@ -83,6 +87,8 @@ void Simulation::initializeFile(const std::string &configFilePath) {
                 
     }
 configFile.close();  // Close the file
+std::cout << "Simulation constructed, this = " << this << std::endl;
+
 }
 
 
@@ -223,6 +229,11 @@ Simulation& Simulation::operator=(Simulation&& other) noexcept {
 void Simulation::start(){
     open();
     cout << "The simulation has started";
+    std::cout << "Simulation::start() called, this = " << this << std::endl;
+    if (this == nullptr) {
+        std::cerr << "Error: this is null in start()" << std::endl;
+        throw std::runtime_error("Invalid Simulation object");
+    }
     while (isRunning) {
         BaseAction *action;
         string command;
@@ -232,6 +243,8 @@ void Simulation::start(){
                 // checking commands
                 if(requestedAction == "step"){
                     action = new SimulateStep(std::stoi(arguments[1]));
+                    action->act(*this);
+                    addAction(action);
                 }
                 else if (requestedAction == "settlement"){
                 const string& sName = arguments[1];

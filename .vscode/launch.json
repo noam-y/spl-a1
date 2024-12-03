@@ -49,7 +49,7 @@
             "name": "Linux",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/main",
+            "program": "${workspaceFolder}/bin/program",
             "args": [
                 "config_file.txt"
             ],
