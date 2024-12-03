@@ -26,6 +26,9 @@ environment_score(0){
     constructionLimit = settlement.getConstructionLimit();
 }
 
+Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions, int LifeScore, int EconomyScore, int EnviromentScore) 
+: plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), status(PlanStatus::AVALIABLE), facilities(), underConstruction(), facilityOptions(facilityOptions), life_quality_score(0), economy_score(0), environment_score(0){}
+
 
 Plan::Plan(const Plan& other):plan_id(other.plan_id),
 settlement(other.settlement),
@@ -39,13 +42,13 @@ environment_score(other.environment_score), constructionLimit(other.construction
     vector<Facility*> facilities; 
     vector<Facility*> underConstruction;
     
-    for (int i = 0;  static_cast<std::size_t>(i) <other.facilities.size() ; i++){
-       facilities.push_back(other.facilities.at(i)->clone());
+    for (std::size_t i = 0; i < other.facilities.size(); i++) {
+    facilities.push_back(other.facilities.at(i)->clone());
     }
-    for (int i = 0;  static_cast<std::size_t>(i) <other.underConstruction.size() ; i++){
-        underConstruction.push_back(other.underConstruction.at(i)->clone());
+    for (std::size_t i = 0; i < other.underConstruction.size(); i++) {
+    underConstruction.push_back(other.underConstruction.at(i)->clone());
     }
- }
+}
 
 Plan::Plan(Plan&& other) noexcept:plan_id(other.plan_id),
 settlement(other.settlement),
@@ -67,6 +70,23 @@ constructionLimit(other.constructionLimit){
 
 
 //TODO: COPY CONSTRUCTOR destructor, copy constructor, HALF RULE OF FIVE- EXPLAINED IN FORUM
+
+const Settlement& Plan::getSettlement() const{
+    return settlement;
+}
+
+const PlanStatus Plan::getStatus() const{
+    return status;
+}
+
+const SelectionPolicy* Plan::getSelectionPolicy() const{
+    return selectionPolicy;
+
+}
+
+vector<Facility*> Plan:: getUnderConstruction(){
+    return underConstruction;
+}
 
 const int Plan::getID() const{
     return plan_id;

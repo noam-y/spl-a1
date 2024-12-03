@@ -96,14 +96,8 @@ AddFacility::AddFacility(const string &facilityName,
 void AddFacility::act(Simulation& simulation) {
     FacilityType f(facilityName, facilityCategory, price, lifeQualityScore,
                     economyScore, environmentScore);
-<<<<<<< HEAD
     //bool status = simulation.addFacility(f);
     // TODO
-=======
-    bool status = simulation.addFacility(f);
-    if (status){complete();}
-    else{error("action addFacility not complete");}
->>>>>>> aad023379e9eb2dce212ef914c51140321af81e9
 }
 
 AddFacility* AddFacility::clone() const {
@@ -135,53 +129,6 @@ PrintPlanStatus * PrintPlanStatus::clone() const{return new PrintPlanStatus(*thi
     return "print plan status for plan id:" + to_string(planId);
  }
 
-<<<<<<< HEAD
-=======
- ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy):
- planId(planId), newPolicy(newPolicy){}
-
- void ChangePlanPolicy::act(Simulation &simulation){
-    Plan p = simulation.getPlan(planId);
-    if (newPolicy == "bal"){
-        p.setSelectionPolicy(new BalancedSelection(0,0,0));
-    }
-    else if (newPolicy == "nve"){
-        p.setSelectionPolicy( new NaiveSelection());
-    }
-    else if(newPolicy == "eco"){
-        p.setSelectionPolicy(new EconomySelection());
-    }
-    else if(newPolicy == "env"){
-        p.setSelectionPolicy(new SustainabilitySelection());
-    }
-    else{
-        error( "no selection given- ERROR" );
-    }
-    complete();
- }
-
-ChangePlanPolicy *ChangePlanPolicy::clone() const{return new ChangePlanPolicy(*this);}
-const string ChangePlanPolicy::toString() const{return "Change policy for id" + to_string(planId) + "policy" + newPolicy;}
-
-PrintActionsLog::PrintActionsLog(){}
-void PrintActionsLog::act(Simulation &simulation){
-    for (BaseAction* a : simulation.getActionsLog()){
-        cout << a->toString() << endl;
-    }
-    complete();
-}
-
-PrintActionsLog *PrintActionsLog::clone() const{return new PrintActionsLog(*this);}
-const string PrintActionsLog::toString() const{return "printing action log";}
-
-Close::Close(){}
-void Close::act(Simulation &simulation){
-    simulation.close();
-    complete();
-}
-Close *Close::clone() const{return new Close(*this);}
-const string Close::toString() const{return "Closing Program, goodbye!";}
->>>>>>> aad023379e9eb2dce212ef914c51140321af81e9
 
 
 BackupSimulation:: BackupSimulation() {}
@@ -201,19 +148,11 @@ void BackupSimulation:: act(Simulation &simulation) {
 
 
 BackupSimulation *BackupSimulation::clone() const {
-<<<<<<< HEAD
     return new BackupSimulation();
 }
 
 const  string BackupSimulation:: toString() const {
-      return "backup: " + to_string();
-=======
-    return new BackupSimulation(*this);
-}
-
-const  string BackupSimulation:: toString() const {
-      return "backup COMPLITED"; // ADD A HELPER FUNCTION?
->>>>>>> aad023379e9eb2dce212ef914c51140321af81e9
+      return "backup: COMPLETED";
 
 }
 
@@ -234,24 +173,12 @@ void RestoreSimulation:: act(Simulation &simulation) {
 }
 
 RestoreSimulation *RestoreSimulation::clone() const {
-<<<<<<< HEAD
     return new RestoreSimulation();
 }
 
-const string RestoreSimulation:: toString() const {}
+const string RestoreSimulation:: toString() const {
+    
+}
   
 
-=======
-    return new RestoreSimulation(*this) ;
-}
 
-const string RestoreSimulation:: toString() const {
-    if (getStatus() == ActionStatus::COMPLETED) {
-        return "restore COMPLETED";
-    } else if (getStatus() == ActionStatus::ERROR) {
-        return "restore ERROR";
-    } else {
-        return "restore Unknown";
-        }
-}
->>>>>>> aad023379e9eb2dce212ef914c51140321af81e9
