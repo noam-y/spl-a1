@@ -51,7 +51,7 @@ void Simulation::initializeFile(const std::string &configFilePath) {
                 }
             }
             if (!isExist){
-                cout << "Facility already exist"<< endl;
+                cout << "Facility already exist rising for simulation initfile"<< endl;
             }
             facilitiesOptions.push_back(FacilityType(fName, fCategory, fPrice, lifeQualityScore, economyScore, environmentScore));
         }

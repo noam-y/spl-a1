@@ -3,7 +3,7 @@ make: all
 all: clean compile link run
 
 clean:
-	rm -f ./bin/*
+	rm -f ./bin/* bin/program
 
 compile : src/Auxiliary.cpp src/main.cpp src/Simulation.cpp src/Settlement.cpp src/Facility.cpp src/FacilityType.cpp src/selectionpolicy2.cpp src/Action.cpp src/Plan.cpp
 	g++ -c -Wall -g -Iinclude -o bin/Auxiliary.o src/Auxiliary.cpp
@@ -17,7 +17,7 @@ compile : src/Auxiliary.cpp src/main.cpp src/Simulation.cpp src/Settlement.cpp s
 	g++ -c -Wall -g -Iinclude -o bin/Plan.o src/Plan.cpp
 
 
-link : bin/main.o bin/Auxiliary.o bin/Simulation.o bin/Settlement.o bin/Action.o bin/Plan.o
+link : bin/main.o bin/Auxiliary.o bin/Simulation.o bin/Settlement.o bin/Action.o bin/Plan.o bin/Facility.o
 	g++ -o bin/program bin/main.o bin/Auxiliary.o bin/Simulation.o bin/Settlement.o bin/Facility.o bin/FacilityType.o bin/selectionpolicy2.o bin/Action.o bin/Plan.o
 
 plan:
@@ -25,3 +25,6 @@ plan:
 
 run : bin/program
 	bin/program config_file.txt
+
+
+CXXFLAGS = -g -Wall -O0 -std=c++11
