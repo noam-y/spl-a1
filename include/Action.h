@@ -6,6 +6,7 @@ using namespace std;
 enum class SettlementType;
 enum class FacilityCategory;
 class Simulation;
+extern Simulation* backup; // global var
 enum class ActionStatus{
     COMPLETED, ERROR
 };

@@ -20,8 +20,6 @@ int main(int argc, char** argv){
     Simulation simulation(configurationFile);
     simulation.start();
 
-    //Settlement s = Settlement("BS", SettlementType::CITY);
-    //cout << s.toString() << endl;
     if(backup!=nullptr){
     	delete backup;
     	backup = nullptr;

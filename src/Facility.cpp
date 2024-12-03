@@ -14,8 +14,9 @@ using namespace std;
           };
           
          Facility::Facility(const FacilityType &type, const string &settlementName):
-         Facility(settlementName,settlementName,type.getCategory(), type.getCost(), type.getLifeQualityScore(),
-         type.getEconomyScore(), type.getEnvironmentScore()){};
+         FacilityType(type), settlementName(settlementName), status(FacilityStatus::UNDER_CONSTRUCTIONS), timeLeft(price){}
+        //  Facility(settlementName ,settlementName,type.getCategory(), type.getCost(), type.getLifeQualityScore(),
+        //  type.getEconomyScore(), type.getEnvironmentScore()){};
 
         Facility* Facility::clone(){
             return new Facility(*this);

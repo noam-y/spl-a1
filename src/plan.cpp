@@ -18,7 +18,7 @@ settlement(settlement),
 selectionPolicy(selectionPolicy), 
 status(PlanStatus::AVALIABLE),
 facilityOptions(facilityOptions),
-life_quality_score(), 
+life_quality_score(0), 
 economy_score(0), 
 environment_score(0){
     vector<Facility*> facilities; //TODO FIX
@@ -33,19 +33,18 @@ status(other.status),
 facilityOptions(other.facilityOptions),
 life_quality_score(other.life_quality_score),
 economy_score(other.economy_score),
+
 environment_score(other.environment_score), constructionLimit(other.constructionLimit){
     selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
     vector<Facility*> facilities; 
     vector<Facility*> underConstruction;
-    vector<FacilityType> facilityOptions;
     
     for (int i = 0;  static_cast<std::size_t>(i) <other.facilities.size() ; i++){
-        this->facilities.push_back(other.facilities.at(i)->clone());
+       facilities.push_back(other.facilities.at(i)->clone());
     }
     for (int i = 0;  static_cast<std::size_t>(i) <other.underConstruction.size() ; i++){
-        this->underConstruction.push_back(other.underConstruction.at(i)->clone());
+        underConstruction.push_back(other.underConstruction.at(i)->clone());
     }
-    // TODO facilityOptions
  }
 
 Plan::Plan(Plan&& other) noexcept:plan_id(other.plan_id),
@@ -62,6 +61,7 @@ constructionLimit(other.constructionLimit){
     for (int i = 0;  static_cast<std::size_t>(i) <other.underConstruction.size() ; i++){
         other.underConstruction.at(i) = nullptr;
     }
+    selectionPolicy=other.selectionPolicy;
     other.selectionPolicy = nullptr;
 }
 
@@ -92,6 +92,7 @@ void Plan::step(){
         FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
         Facility* toBuild = new Facility(typeBuild, settlement.getName());
         addFacility(toBuild);
+        constructionLimit = constructionLimit -1;
         if (constructionLimit == 0){
             status = PlanStatus::BUSY;
         }
