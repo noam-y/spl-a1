@@ -61,27 +61,36 @@ void Simulation::initializeFile(const std::string &configFilePath) {
         }
         //Parsing plan
         else if (parsedArgs[0] == "plan") {
-        SelectionPolicy* currPolicy = nullptr;
-            if (parsedArgs[2] == "bal") {
-                currPolicy = new BalancedSelection(0,0,0);  
-            } 
-            else if (parsedArgs[2]== "eco") {
-                currPolicy = new SustainabilitySelection ();
-            }
-            else if (parsedArgs[2] == "env") {
-                currPolicy = new EconomySelection();  
-            } 
-            else {
-                    currPolicy = new NaiveSelection();  
-            }
-            Settlement* sName = nullptr;
-            for (auto& s : settlements) {
-                if (s->getName() == parsedArgs[1]) { 
-                    sName = s;
-                    break;
+        Settlement* sName = nullptr;
+        for (int i = 0;  static_cast<std::size_t>(i) < settlements.size() ; i++){
+            if (settlements.at(i)->getName() == parsedArgs[1] ){
+                sName = settlements.at(i);
+                break;
                 }
+        }
+         
+        string policyName = parsedArgs[2];
+
+            if (policyName == "bal") {
+                SelectionPolicy* bal = new BalancedSelection(0,0,0); 
+                plans.push_back(Plan(planCounter,*sName,bal,facilitiesOptions));  
+            } 
+            else if (policyName== "eco") {
+                SelectionPolicy* eco = new EconomySelection ();
+                plans.push_back(Plan(planCounter,*sName,eco,facilitiesOptions));  
             }
-            plans.push_back(Plan(planCounter, *sName, currPolicy, facilitiesOptions));
+            else if (policyName == "env") {
+                SelectionPolicy* env = new SustainabilitySelection();  
+                plans.push_back(Plan(planCounter,*sName,env,facilitiesOptions));  
+            } 
+            else if (policyName == "nve") {
+                SelectionPolicy* nav = new NaiveSelection();
+                plans.push_back(Plan(planCounter,*sName,nav,facilitiesOptions));  
+            }
+            else {
+                throw std::runtime_error("non existent selection policy");
+            }
+            
             planCounter++;
         }
                 
@@ -121,7 +130,7 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),
         settlements.push_back(new Settlement(*s)); // Deep copy each settlement
     }
 
-        // Deep copy plan, since it has resources.
+    // Deep copy plan, since it has resources.
     for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
         plans.push_back(Plan(other.plans.at(i)));
     }
@@ -230,10 +239,6 @@ void Simulation::start(){
     open();
     cout << "The simulation has started";
     std::cout << "Simulation::start() called, this = " << this << std::endl;
-    if (this == nullptr) {
-        std::cerr << "Error: this is null in start()" << std::endl;
-        throw std::runtime_error("Invalid Simulation object");
-    }
     while (isRunning) {
         BaseAction *action;
         string command;

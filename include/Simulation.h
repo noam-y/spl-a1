@@ -35,7 +35,6 @@ class Simulation {
         void step();
         void close();
         void open();
-        void clear();
         vector<BaseAction*> getActionsLog();
 
     private:
