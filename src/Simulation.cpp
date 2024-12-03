@@ -68,7 +68,7 @@ void Simulation::initializeFile(const std::string &configFilePath) {
                 break;
                 }
         }
-         
+
         string policyName = parsedArgs[2];
 
             if (policyName == "bal") {
@@ -242,9 +242,11 @@ void Simulation::start(){
     while (isRunning) {
         BaseAction *action;
         string command;
-        getline(cin, command);
+        getline(std::cin, command);
+        
         vector<string> arguments = Auxiliary:: parseArguments(command);
                 const string &requestedAction = arguments[0];
+                cout << requestedAction << endl;
                 // checking commands
                 if(requestedAction == "step"){
                     action = new SimulateStep(std::stoi(arguments[1]));
@@ -282,7 +284,7 @@ void Simulation::start(){
                     action = new AddPlan(sName, selectionPolicy);                    
                 }
                 
-                else if(requestedAction == "planstatus")
+                else if(requestedAction == "planStatus")
                 {
                     action = new PrintPlanStatus(std::stoi(arguments[1]));
                 }

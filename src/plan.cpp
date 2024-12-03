@@ -92,6 +92,7 @@ void Plan::step(){
         FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
         Facility* toBuild = new Facility(typeBuild, settlement.getName());
         addFacility(toBuild);
+        constructionLimit = constructionLimit -1;
         if (constructionLimit == 0){
             status = PlanStatus::BUSY;
         }
