@@ -60,6 +60,15 @@ void AddPlan::act(Simulation &simulation){
     complete();
 }
 
+const string AddPlan::toString() const{
+    return "adding plan of " + selectionPolicy + " to settlement: " + settlementName;
+}
+
+AddPlan *AddPlan::clone() const{
+    return new AddPlan(*this);
+}
+
+
 AddSettlement::AddSettlement(const string &settlementName,SettlementType settlementType):
 settlementName(settlementName), settlementType(settlementType){}
 
