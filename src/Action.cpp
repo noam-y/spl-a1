@@ -148,11 +148,11 @@ void BackupSimulation:: act(Simulation &simulation) {
 
 
 BackupSimulation *BackupSimulation::clone() const {
-    return new BackupSimulation();
+    return new BackupSimulation(*this);
 }
 
 const  string BackupSimulation:: toString() const {
-      return "backup: COMPLETED";
+      return "backup COMPLITED"; // ADD A HELPER FUNCTION?
 
 }
 
@@ -173,12 +173,15 @@ void RestoreSimulation:: act(Simulation &simulation) {
 }
 
 RestoreSimulation *RestoreSimulation::clone() const {
-    return new RestoreSimulation();
+    return new RestoreSimulation(*this) ;
 }
 
 const string RestoreSimulation:: toString() const {
-    
+    if (getStatus() == ActionStatus::COMPLETED) {
+        return "restore COMPLETED";
+    } else if (getStatus() == ActionStatus::ERROR) {
+        return "restore ERROR";
+    } else {
+        return "restore Unknown"; 
+    }
 }
-  
-
-
