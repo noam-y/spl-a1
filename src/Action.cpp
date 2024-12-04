@@ -51,7 +51,7 @@ AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy):
 settlementName(settlementName),selectionPolicy(selectionPolicy){}
 
 void AddPlan::act(Simulation &simulation){
-    Settlement stl = simulation.getSettlement(settlementName);
+    Settlement& stl = simulation.getSettlement(settlementName);
     SelectionPolicy* selectP = nullptr;
     if (selectionPolicy == "bal"){
         selectP = new BalancedSelection(0,0,0);
@@ -85,8 +85,8 @@ AddSettlement::AddSettlement(const string &settlementName,SettlementType settlem
 settlementName(settlementName), settlementType(settlementType){}
 
 void AddSettlement::act(Simulation &simulation) {
-    Settlement stl = Settlement(settlementName,settlementType);
-    bool status = simulation.addSettlement(&stl);
+    Settlement *stl = new Settlement(settlementName,settlementType);
+    bool status = simulation.addSettlement(stl);
     if (status){complete();}
     else{error("action AddSettlement not complete");}
 }
@@ -106,10 +106,11 @@ AddFacility::AddFacility(const string &facilityName,
  economyScore(economyScore), environmentScore(environmentScore){}
 
 void AddFacility::act(Simulation& simulation) {
-    FacilityType f(facilityName, facilityCategory, price, lifeQualityScore,
+    const FacilityType& f = FacilityType(facilityName, facilityCategory, price, lifeQualityScore,
                     economyScore, environmentScore);
-    //bool status = simulation.addFacility(f);
-    // TODO
+    bool status = simulation.addFacility(f);
+    if (status){complete();}
+    else{error("action AddFacility not complete");}
 }
 
 AddFacility* AddFacility::clone() const {

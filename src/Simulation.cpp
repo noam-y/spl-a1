@@ -131,7 +131,7 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),
     }
 
     // Deep copy plan, since it has resources.
-    for (Plan p : other.plans)
+    for (const Plan &p : other.plans)
     {
         Plan pnew(p.getID(), 
           this->getSettlement(p.getSettlement().getName()), 
@@ -168,7 +168,7 @@ Simulation& Simulation::operator=(const Simulation& other) {
         // Clear existing plans
          plans.clear();
 
-        for (Plan p : other.plans)
+        for (const Plan& p : other.plans)
         {
             Plan pnew(p.getID(), 
           this->getSettlement(p.getSettlement().getName()), 
@@ -278,9 +278,10 @@ void Simulation::start(){
                 int s = sizeof(settlementTypesArray) / sizeof(settlementTypesArray[0]);
                 if (sIndex >= 0 && sIndex < s) {
                     action = new AddSettlement(sName, settlementTypesArray[sIndex]);
-                } else {
+                } 
+                else {
                     throw std::runtime_error("Invalid settlement type");
-    }
+                }
                 }
                 else if(requestedAction == "facility")
                 {
@@ -291,12 +292,11 @@ void Simulation::start(){
                     int lifeQualityScore = std::stoi(arguments[4]);
                     int economyScore = std::stoi(arguments[5]);
                     int environmentScore = std::stoi(arguments[6]);
+
                     action = new AddFacility(fName, category, price, lifeQualityScore, economyScore,environmentScore);
                 }
                 else if(requestedAction == "plan"){                    
-                    const string& sName = arguments[1];
-                    const string& selectionPolicy = arguments[2];
-                    action = new AddPlan(sName, selectionPolicy);                    
+                    action = new AddPlan(arguments[1], arguments[2]);                    
                 }
                 
                 else if(requestedAction == "planStatus") 
@@ -347,12 +347,12 @@ void Simulation::open()
 }
 
 
-void Simulation::  addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy){
+void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy){
         int planID = planCounter;
         planCounter++;
-        Plan p = Plan(planID, settlement, selectionPolicy, facilitiesOptions);
+        Plan p = Plan(planID, settlement, selectionPolicy, this->facilitiesOptions);
         plans.push_back(p);
- }
+ } //DEBUGG HERE IS GOOD
 
 void Simulation:: addAction(BaseAction *action){
     actionsLog.push_back(action);
@@ -383,7 +383,7 @@ bool Simulation:: addFacility(FacilityType facility){
     // If not found, add the facility to the vector
     facilitiesOptions.push_back(facility);
     return true; 
-        }
+}
 
 
 

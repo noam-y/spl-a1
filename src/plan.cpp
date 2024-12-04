@@ -143,7 +143,7 @@ const string Plan::getStatusString() const{
         s = "AVALIABLE";
     }
     else{
-        s = "UNDER CONSTRUCTION";
+        s = "BUSY";
     }
     return s;
 }
@@ -167,9 +167,11 @@ void Plan::addFacility(Facility* facility){
 }
 
 const string Plan::toString() const{
-    string s = "planID: " + to_string(this->plan_id) + "/n" + "Settlement Name: " + this->getSettlement().getName() +"\n selectionPolicy: "
+    string s = "planID: " + to_string(this->plan_id) + "\n" + "Settlement Name: " + this->getSettlement().getName() +
+    "\n planStatus " + this->getStatusString() + "\n selectionPolicy: "
     + this->getSelectionPolicy()->toString() + "\n life quality: " + to_string(this->getlifeQualityScore()) +
     "\n economy score: " + to_string(this->getEconomyScore()) + "\n enviroment Score:" + to_string (this->getEnvironmentScore());
+    //TODO
     for (int i = 0; static_cast<std::size_t>(i) <this->underConstruction.size() ; i++){
         s = s + "\n Facility name: " + underConstruction.at(i)->getName() + " status: UNDERCONSTRUCTION";
     }
