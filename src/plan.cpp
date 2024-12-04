@@ -102,7 +102,9 @@ const int Plan::getEnvironmentScore() const{
     return environment_score;
 }
 void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
-     delete this->selectionPolicy;
+    if (selectionPolicy != nullptr){
+        delete this->selectionPolicy;
+    }
      this->selectionPolicy = selectionPolicy;
      };// TODO destruct prev selection policy
 

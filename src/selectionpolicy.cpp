@@ -74,7 +74,7 @@ const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType>
 
 // Implement with  3 scores
 const string BalancedSelection::toString() const {
-    return "balanced selection";
+    return "balance";
 }
 
 BalancedSelection *BalancedSelection::clone() const

@@ -303,7 +303,7 @@ void Simulation::start(){
                 {
                     action = new PrintPlanStatus(std::stoi(arguments[1]));
                 }
-                else if(requestedAction == "changeplanpolicy")
+                else if(requestedAction == "changePolicy")
                 {
                     ChangePlanPolicy* planPolicyChange = new ChangePlanPolicy(std::stoi(arguments[1]),arguments[2]);
                     action = planPolicyChange;

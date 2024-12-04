@@ -198,9 +198,13 @@ const string RestoreSimulation:: toString() const {
  ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy):
  planId(planId), newPolicy(newPolicy){}
  void ChangePlanPolicy::act(Simulation &simulation){
-    Plan p = simulation.getPlan(planId);
+    Plan& p = simulation.getPlan(planId);
+    cout << "plan id: "  + to_string(planId) + "\n old policy: " + p.getSelectionPolicy()->toString() << endl;
     if (newPolicy == "bal"){
-        p.setSelectionPolicy(new BalancedSelection(0,0,0));
+        if (p.getSelectionPolicy()->toString() == "balance"){
+            p.setSelectionPolicy(new BalancedSelection(0,0,0));
+        }
+        
     }
     else if (newPolicy == "nve"){
         p.setSelectionPolicy( new NaiveSelection());
@@ -214,10 +218,12 @@ const string RestoreSimulation:: toString() const {
     else{
         error( "no selection given- ERROR" );
     }
+    cout << "\n new policy:" + p.getSelectionPolicy()->toString() <<endl;
     complete();
  }
 ChangePlanPolicy *ChangePlanPolicy::clone() const{return new ChangePlanPolicy(*this);}
-const string ChangePlanPolicy::toString() const{return "Change policy for id" + to_string(planId) + "policy" + newPolicy;}
+const string ChangePlanPolicy::toString() const{return "Change policy for id" + to_string(planId) 
++ "\n policy" + newPolicy;}
 
   
 
