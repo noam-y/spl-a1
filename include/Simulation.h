@@ -36,6 +36,7 @@ class Simulation {
         void close();
         void open();
         vector<BaseAction*> getActionsLog();
+        int getPlanCount();
 
     private:
         bool isRunning;

@@ -131,6 +131,9 @@ const string AddFacility::toString() const {
 PrintPlanStatus::PrintPlanStatus(int planID):planId(planID){}
 
 void PrintPlanStatus::act(Simulation &simulation){
+    if (simulation.getPlanCount() - 1 < planId)  {
+        error ("Plan doesn't exist");
+    }
     Plan plan = simulation.getPlan(planId);
     cout << plan.toString() <<endl;
     

@@ -38,7 +38,13 @@ life_quality_score(other.life_quality_score),
 economy_score(other.economy_score),
 
 environment_score(other.environment_score), constructionLimit(other.constructionLimit){
-    selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
+    if (selectionPolicy){
+        //TODO
+        
+    }
+    else{
+       selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
+    }
     vector<Facility*> facilities; 
     vector<Facility*> underConstruction;
     

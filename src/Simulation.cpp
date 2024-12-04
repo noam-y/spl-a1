@@ -415,8 +415,6 @@ Plan &Simulation:: getPlan(const int planID) {
         }
 
     }
-    // If no plan is found with the given ID, throw an exception or handle the error.
-    throw std::runtime_error("No such plan exists");
 }
 void Simulation:: step(){
     for (int i = 0; i < planCounter; i++){
@@ -426,6 +424,30 @@ void Simulation:: step(){
 
 void Simulation:: close(){
     isRunning = false;
+
+    for (Plan p : plans){
+        string planInfo = "";
+        planInfo = "planID: " + to_string(p.getID()) + "> \n SettlementName: " + p.getSettlement().getName() + " \n LifeQualityScore: " +to_string(p.getlifeQualityScore()) + "\n EconomyScore: " + to_string(p.getEconomyScore()) + "\n EnvironmentScore:" + to_string(p.getEnvironmentScore()) + "\n";
+        cout << planInfo;
+    }
+
+    plans.clear();
+    for (Settlement *settlement : settlements){//עושות NEW בבנאי ולכן מוחקות
+        delete settlement;
+    }
+    settlements.clear();
+    facilitiesOptions.clear();
+
+    for (BaseAction* action : actionsLog){
+        delete action;
+    }
+    actionsLog.clear();
 }
 
+
+
 vector<BaseAction*> Simulation::getActionsLog(){return actionsLog;}
+
+int Simulation::getPlanCount(){
+    return planCounter;
+}
