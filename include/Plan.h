@@ -13,7 +13,6 @@ enum class PlanStatus {
 class Plan {
     public:
         Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions);
-        Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions, int LifeScore, int EconomyScore, int EnviromentScore);
         Plan(const Plan &other);
         Plan(Plan&& other) noexcept; // move constructor
         Plan& operator=(const Plan &other)=delete;
@@ -28,10 +27,6 @@ class Plan {
         void addFacility(Facility* facility);
         const string toString() const;
         const string getStatusString() const;
-        const Settlement& getSettlement() const;
-        const PlanStatus getStatus() const;
-        const SelectionPolicy* getSelectionPolicy() const;
-        vector<Facility*> getUnderConstruction();
         const int getID() const;
         const vector<FacilityType> getFacilityOptions() const;
     private:
