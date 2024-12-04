@@ -12,6 +12,18 @@ ActionStatus BaseAction::getStatus() const{
     return status;
 }
 
+string BaseAction::getStatusString() const{
+    string s;
+    if (status == ActionStatus::COMPLETED){
+        s= "COMPLETED";
+
+    }
+    else{
+        s= "ERROR";
+    }
+    return s;
+}
+
 void BaseAction::complete(){status = ActionStatus::COMPLETED;}
 void BaseAction::error(string errorMsg){
     status = ActionStatus::ERROR;
@@ -211,7 +223,7 @@ const string ChangePlanPolicy::toString() const{return "Change policy for id" + 
 PrintActionsLog::PrintActionsLog(){}
 void PrintActionsLog::act(Simulation &simulation){
     for (BaseAction* a : simulation.getActionsLog()){
-        cout << a->toString() << endl;
+        cout << a->toString() + " : " + a->getStatusString() << endl;
     }
     complete();
 }
