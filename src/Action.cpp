@@ -222,11 +222,13 @@ RestoreSimulation *RestoreSimulation::clone() const {
 }
 
 const string RestoreSimulation:: toString() const {
+    string s;
     if (getStatus() == ActionStatus::COMPLETED) {
-        return "restore COMPLETED";
+        s= "restore COMPLETED";
     } else if (getStatus() == ActionStatus::ERROR) {
-        return "restore ERROR";
+        s= "restore ERROR";
     } else {
-        return "restore Unknown";
+        s= "restore Unknown";
         }
+    return s;
 }

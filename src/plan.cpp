@@ -26,6 +26,9 @@ environment_score(0){
     constructionLimit = settlement.getConstructionLimit();
 }
 
+// only used during action restore!
+Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions, int LifeScore, int EconomyScore, int EnviromentScore) 
+: plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), status(PlanStatus::AVALIABLE), facilities(), underConstruction(), facilityOptions(facilityOptions), life_quality_score(0), economy_score(0), environment_score(0){}
 
 Plan::Plan(const Plan& other):plan_id(other.plan_id),
 settlement(other.settlement),
@@ -68,6 +71,23 @@ constructionLimit(other.constructionLimit){
 
 //TODO: COPY CONSTRUCTOR destructor, copy constructor, HALF RULE OF FIVE- EXPLAINED IN FORUM
 
+const Settlement& Plan::getSettlement() const{
+    return settlement;
+}
+
+const PlanStatus Plan::getStatus() const{
+    return status;
+}
+
+const SelectionPolicy* Plan::getSelectionPolicy() const{
+    return selectionPolicy;
+
+}
+
+vector<Facility*> Plan:: getUnderConstruction(){
+    return underConstruction;
+}
+
 const int Plan::getID() const{
     return plan_id;
 }
@@ -84,8 +104,7 @@ const int Plan::getEnvironmentScore() const{
 void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
      delete this->selectionPolicy;
      this->selectionPolicy = selectionPolicy;
-     };// TODO destruct prev selection policy
-
+     };// TODO destruct prev selection policy
 
 void Plan::step(){
     while (status == PlanStatus::AVALIABLE){

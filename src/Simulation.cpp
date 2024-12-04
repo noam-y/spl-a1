@@ -131,15 +131,23 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),
     }
 
     // Deep copy plan, since it has resources.
-    for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
-        plans.push_back(Plan(other.plans.at(i)));
+    for (Plan p : other.plans)
+    {
+        Plan pnew(p.getID(), 
+          this->getSettlement(p.getSettlement().getName()), 
+          p.getSelectionPolicy()->clone(), 
+          facilitiesOptions);
+
+          plans.push_back(pnew);
     }
+
 
     // Deep copy actions
     for (const BaseAction* a : other.actionsLog) {
         actionsLog.push_back(a->clone()); // Clone each action
     }
 }
+
 
 
 Simulation& Simulation::operator=(const Simulation& other) {
@@ -157,10 +165,17 @@ Simulation& Simulation::operator=(const Simulation& other) {
 
         isRunning= other.isRunning;
         planCounter= other.planCounter;
-        vector<Plan> plans;
-        for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
-            plans.push_back(Plan(other.plans.at(i)));
+        // Clear existing plans
+         plans.clear();
+
+        for (Plan p : other.plans)
+        {
+            Plan pnew(p.getID(), 
+          this->getSettlement(p.getSettlement().getName()), 
+          p.getSelectionPolicy()->clone(), 
+          facilitiesOptions);
         }
+        
         facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
         //deep dopy:
         for (const Settlement* s: other.settlements){
@@ -171,9 +186,8 @@ Simulation& Simulation::operator=(const Simulation& other) {
         }
    
     }
-     return *this;
-
-} 
+    return *this;
+}
 
 Simulation::Simulation(Simulation&& other) noexcept : isRunning(other.isRunning),
       planCounter(other.planCounter),
@@ -284,7 +298,7 @@ void Simulation::start(){
                     action = new AddPlan(sName, selectionPolicy);                    
                 }
                 
-                else if(requestedAction == "planStatus")
+                else if(requestedAction == "planStatus") 
                 {
                     action = new PrintPlanStatus(std::stoi(arguments[1]));
                 }
