@@ -267,8 +267,6 @@ void Simulation::start(){
                 }
                 else if(requestedAction == "step"){
                     action = new SimulateStep(std::stoi(arguments[1]));
-                    action->act(*this);
-                    addAction(action);
                 }
                 else if (requestedAction == "settlement"){
                 const string& sName = arguments[1];
@@ -336,12 +334,12 @@ void Simulation::start(){
                 }
                 else{
                     action->act(*this);
-                    actionsLog.push_back(action);
+                    addAction(action);
+
                 }
 
             } 
         }
-
 
 void Simulation::open()
 {

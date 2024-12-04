@@ -117,10 +117,11 @@ void Plan::step(){
             status = PlanStatus::BUSY;
         }
     }
-    for (std::size_t i = 0; i< underConstruction.size(); i++){
+    for (std::size_t i = underConstruction.size(); i-- > 0;){
         FacilityStatus f1 = underConstruction.at(i)->step();
         if (f1 == FacilityStatus::OPERATIONAL){
             addFacility(underConstruction.at(i));
+            underConstruction.erase(underConstruction.begin() + i);
             // we now have more space availiable to construction
             constructionLimit = constructionLimit + 1;
         }
@@ -166,10 +167,15 @@ void Plan::addFacility(Facility* facility){
 }
 
 const string Plan::toString() const{
-    string s = "plan id: " + to_string(plan_id) + "settlementName: " + settlement.Settlement::getName()
-    + "\n status: " + getStatusString() +  "scores- economy:" 
-    + to_string(economy_score) + " enviroment:" + to_string(environment_score) +
-    "life quality: " + to_string(life_quality_score);
+    string s = "planID: " + to_string(this->plan_id) + "/n" + "Settlement Name: " + this->getSettlement().getName() +"\n selectionPolicy: "
+    + this->getSelectionPolicy()->toString() + "\n life quality: " + to_string(this->getlifeQualityScore()) +
+    "\n economy score: " + to_string(this->getEconomyScore()) + "\n enviroment Score:" + to_string (this->getEnvironmentScore());
+    for (int i = 0; static_cast<std::size_t>(i) <this->underConstruction.size() ; i++){
+        s = s + "\n Facility name: " + underConstruction.at(i)->getName() + " status: UNDERCONSTRUCTION";
+    }
+    for (int i = 0; static_cast<std::size_t>(i) <this->getFacilities().size() ; i++){
+        s = s + "\n Facility name: " + getFacilities().at(i)->getName() + " status: OPERATIONAL";
+    }
     return s;
 }
 

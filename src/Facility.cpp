@@ -28,13 +28,13 @@ using namespace std;
             return timeLeft;
         }
         FacilityStatus Facility::step(){
+            timeLeft = timeLeft - 1;
             if (timeLeft == 0){
                 setStatus(FacilityStatus::OPERATIONAL);
                 return FacilityStatus::OPERATIONAL;
                 //Plan::addFacility(*this); TODO
             }
             else{
-                timeLeft = timeLeft - 1;
                 return FacilityStatus::UNDER_CONSTRUCTIONS;
             }
         }

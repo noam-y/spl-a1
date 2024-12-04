@@ -120,6 +120,7 @@ PrintPlanStatus::PrintPlanStatus(int planID):planId(planID){}
 void PrintPlanStatus::act(Simulation &simulation){
     Plan plan = simulation.getPlan(planId);
     cout << plan.toString() <<endl;
+    
     complete();
 }
 
