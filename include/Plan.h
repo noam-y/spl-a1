@@ -34,6 +34,7 @@ class Plan {
         vector<Facility*> getUnderConstruction();
         const int getID() const;
         const vector<FacilityType> getFacilityOptions() const;
+        
     private:
         int plan_id;
         const Settlement &settlement;

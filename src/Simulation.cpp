@@ -118,6 +118,7 @@ Simulation::~Simulation() {
 
 
 
+
 Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),                   
       planCounter(other.planCounter),               
       actionsLog(),                                                        
@@ -136,6 +137,8 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),
           this->getSettlement(p.getSettlement().getName()), 
           p.getSelectionPolicy()->clone(), 
           facilitiesOptions);
+
+          plans.push_back(pnew);
     }
 
 
@@ -172,8 +175,6 @@ Simulation& Simulation::operator=(const Simulation& other) {
           p.getSelectionPolicy()->clone(), 
           facilitiesOptions);
         }
-
-
         
         facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
         //deep dopy:
@@ -185,9 +186,8 @@ Simulation& Simulation::operator=(const Simulation& other) {
         }
    
     }
-     return *this;
-
-} 
+    return *this;
+}
 
 Simulation::Simulation(Simulation&& other) noexcept : isRunning(other.isRunning),
       planCounter(other.planCounter),
@@ -254,15 +254,18 @@ void Simulation::start(){
     cout << "The simulation has started";
     std::cout << "Simulation::start() called, this = " << this << std::endl;
     while (isRunning) {
-        BaseAction *action;
+        BaseAction *action = nullptr;
         string command;
         getline(std::cin, command);
         
+        
         vector<string> arguments = Auxiliary:: parseArguments(command);
                 const string &requestedAction = arguments[0];
-                cout << requestedAction << endl;
                 // checking commands
-                if(requestedAction == "step"){
+                if (command.empty()){
+                    cout << "please enter action" <<endl;
+                }
+                else if(requestedAction == "step"){
                     action = new SimulateStep(std::stoi(arguments[1]));
                     action->act(*this);
                     addAction(action);
@@ -298,7 +301,7 @@ void Simulation::start(){
                     action = new AddPlan(sName, selectionPolicy);                    
                 }
                 
-                else if(requestedAction == "planStatus")
+                else if(requestedAction == "planStatus") 
                 {
                     action = new PrintPlanStatus(std::stoi(arguments[1]));
                 }
@@ -323,8 +326,19 @@ void Simulation::start(){
                 {
                     action = new RestoreSimulation();
                 }
-                action->act(*this);
-                actionsLog.push_back(action);
+                else if(requestedAction == "\n")
+                {
+                    cout << "enter action!" << endl;
+                }
+
+                if (action == nullptr){
+                    cout << "invalid action" << endl;
+                }
+                else{
+                    action->act(*this);
+                    actionsLog.push_back(action);
+                }
+
             } 
         }
 
@@ -416,6 +430,4 @@ void Simulation:: close(){
     isRunning = false;
 }
 
-
-
-
+vector<BaseAction*> Simulation::getActionsLog(){return actionsLog;}

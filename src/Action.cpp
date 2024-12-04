@@ -179,6 +179,51 @@ RestoreSimulation *RestoreSimulation::clone() const {
 const string RestoreSimulation:: toString() const {
     
 }
+
+
+ ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy):
+ planId(planId), newPolicy(newPolicy){}
+ void ChangePlanPolicy::act(Simulation &simulation){
+    Plan p = simulation.getPlan(planId);
+    if (newPolicy == "bal"){
+        p.setSelectionPolicy(new BalancedSelection(0,0,0));
+    }
+    else if (newPolicy == "nve"){
+        p.setSelectionPolicy( new NaiveSelection());
+    }
+    else if(newPolicy == "eco"){
+        p.setSelectionPolicy(new EconomySelection());
+    }
+    else if(newPolicy == "env"){
+        p.setSelectionPolicy(new SustainabilitySelection());
+    }
+    else{
+        error( "no selection given- ERROR" );
+    }
+    complete();
+ }
+ChangePlanPolicy *ChangePlanPolicy::clone() const{return new ChangePlanPolicy(*this);}
+const string ChangePlanPolicy::toString() const{return "Change policy for id" + to_string(planId) + "policy" + newPolicy;}
+
   
 
+PrintActionsLog::PrintActionsLog(){}
+void PrintActionsLog::act(Simulation &simulation){
+    for (BaseAction* a : simulation.getActionsLog()){
+        cout << a->toString() << endl;
+    }
+    complete();
+}
+PrintActionsLog *PrintActionsLog::clone() const{return new PrintActionsLog(*this);}
+const string PrintActionsLog::toString() const{return "printing action log";}
+
+
+
+Close::Close(){}
+void Close::act(Simulation &simulation){
+    simulation.close();
+    complete();
+}
+Close *Close::clone() const{return new Close(*this);}
+const string Close::toString() const{return "Closing Program, goodbye!";}
 
