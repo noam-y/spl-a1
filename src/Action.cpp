@@ -208,7 +208,9 @@ const string RestoreSimulation:: toString() const {
     cout << "plan id: "  + to_string(planId) + "\n old policy: " + p.getSelectionPolicy()->toString() << endl;
     if (newPolicy == "bal"){
         if (p.getSelectionPolicy()->toString() == "balance"){
-            p.setSelectionPolicy(new BalancedSelection(0,0,0));
+            p.setSelectionPolicy(new BalancedSelection(simulation.getPlan(planId).getlifeQualityScore(),
+            simulation.getPlan(planId).getEconomyScore(),
+            simulation.getPlan(planId).getEnvironmentScore()));
         }
         
     }
