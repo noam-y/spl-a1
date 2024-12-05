@@ -57,7 +57,9 @@ const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType>
     int currIndex=0;
     for (FacilityType facility : facilitiesOptions)
     {
-        int curr = balanceDiff(facility.getLifeQualityScore(), facility.getEconomyScore(), facility.getEnvironmentScore());
+        int curr = balanceDiff(LifeQualityScore + facility.getLifeQualityScore(),
+        EconomyScore + facility.getEconomyScore(),
+        EnvironmentScore + facility.getEnvironmentScore());
         if (curr < totalDifff)
         {
            totalDifff=curr;

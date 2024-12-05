@@ -47,8 +47,7 @@ using namespace std;
             return status;
         }
         const string Facility::toString() const{
-            string s = "Facility Name: " + getName() + "\n" +
-            "Settlement Name: " + getSettlementName() + "\n";
+            string s = "Facility Name: " + getName() ;
             return s;
 
             //TODO check official tostring guide

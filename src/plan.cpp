@@ -122,7 +122,8 @@ void Plan::step(){
         }
         FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
         Facility* toBuild = new Facility(typeBuild, settlement.getName());
-        addFacility(toBuild);
+        addFacility(toBuild); // will be added to under construction
+        // TODO UPDATE BALANCED_SCORES VALUES
         constructionLimit = constructionLimit -1;
         if (constructionLimit == 0){
             status = PlanStatus::BUSY;
@@ -169,27 +170,34 @@ void Plan::addFacility(Facility* facility){
         this->economy_score = this->economy_score + facility->getEconomyScore();
         this->environment_score = this->environment_score + facility->getEnvironmentScore();
         this->life_quality_score = this->life_quality_score + facility->getLifeQualityScore();
-        // TODO update balance
     }
     else{
         underConstruction.push_back(facility);
+
+        if (getSelectionPolicy()->toString() == "bal"){
+            // update values of balancedscores
+        }
     }
     
 }
 
 const string Plan::toString() const{
-    string s = "planID: " + to_string(this->plan_id) + "\n" + "Settlement Name: " + this->getSettlement().getName() +
-    "\n planStatus " + this->getStatusString() + "\n selectionPolicy: "
-    + this->getSelectionPolicy()->toString() + "\n life quality: " + to_string(this->getlifeQualityScore()) +
-    "\n economy score: " + to_string(this->getEconomyScore()) + "\n enviroment Score:" + to_string (this->getEnvironmentScore());
-    //TODO
-    for (int i = 0; static_cast<std::size_t>(i) <this->underConstruction.size() ; i++){
-        s = s + "\n Facility name: " + underConstruction.at(i)->getName() + " status: UNDERCONSTRUCTION";
-    }
-    for (int i = 0; static_cast<std::size_t>(i) <this->getFacilities().size() ; i++){
-        s = s + "\n Facility name: " + getFacilities().at(i)->getName() + " status: OPERATIONAL";
-    }
-    return s;
+  
+string s = "planID: " + to_string(this->plan_id) + "\n" + "Settlement Name: " + this->getSettlement().getName() +
+"\n planStatus " + this->getStatusString() + "\n selectionPolicy: "
++ this->getSelectionPolicy()->toString() + "\n life quality: " + to_string(this->getlifeQualityScore()) +
+"\n economy score: " + to_string(this->getEconomyScore()) + "\n enviroment Score:" + to_string (this->getEnvironmentScore());
+ //TODO
+for (std::size_t i = 0; i < this->underConstruction.size(); ++i) {
+    s += "\n" + underConstruction.at(i)->toString() + " status: UNDERCONSTRUCTION";
+}
+
+for (std::size_t i = 0; i <this->getFacilities().size() ; i++){
+    s += "\n" + underConstruction.at(i)->toString() + " status: OPERATIONAL";
+}
+
+return s;
+
 }
 
 void Plan::addInfo(const Plan& other){

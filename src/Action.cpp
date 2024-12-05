@@ -203,6 +203,8 @@ const string RestoreSimulation:: toString() const {
 
  ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy):
  planId(planId), newPolicy(newPolicy){}
+
+
  void ChangePlanPolicy::act(Simulation &simulation){
     Plan& p = simulation.getPlan(planId);
     cout << "plan id: "  + to_string(planId) + "\n old policy: " + p.getSelectionPolicy()->toString() << endl;
@@ -229,6 +231,9 @@ const string RestoreSimulation:: toString() const {
     cout << "\n new policy:" + p.getSelectionPolicy()->toString() <<endl;
     complete();
  }
+
+
+ 
 ChangePlanPolicy *ChangePlanPolicy::clone() const{return new ChangePlanPolicy(*this);}
 const string ChangePlanPolicy::toString() const{return "Change policy for id" + to_string(planId) 
 + "\n policy" + newPolicy;}
