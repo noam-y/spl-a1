@@ -36,15 +36,8 @@ status(other.status),
 facilityOptions(other.facilityOptions),
 life_quality_score(other.life_quality_score),
 economy_score(other.economy_score),
-
 environment_score(other.environment_score), constructionLimit(other.constructionLimit){
-    if (selectionPolicy){
-        //TODO
-        
-    }
-    else{
-       selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
-    }
+    selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
     vector<Facility*> facilities; 
     vector<Facility*> underConstruction;
     
@@ -117,6 +110,19 @@ void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
 
 void Plan::step(){
     while (status == PlanStatus::AVALIABLE){
+        if (selectionPolicy == nullptr) {
+        std::cerr << "Error: selectionPolicy is nullptr!" << std::endl;
+        return;
+        }
+
+        if (facilityOptions.empty()) {
+        std::cerr << "Error: facilityOptions is empty!" << std::endl;
+        return;
+        }
+
+        std::cout << "Debug: Calling selectFacility..." << std::endl;
+        std::cout << "Number of facilities: " << facilityOptions.size() << std::endl;
+
         FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
         Facility* toBuild = new Facility(typeBuild, settlement.getName());
         addFacility(toBuild);

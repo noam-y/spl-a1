@@ -134,10 +134,13 @@ void PrintPlanStatus::act(Simulation &simulation){
     if (simulation.getPlanCount() - 1 < planId)  {
         error ("Plan doesn't exist");
     }
-    Plan plan = simulation.getPlan(planId);
-    cout << plan.toString() <<endl;
+    else{
+        Plan plan = simulation.getPlan(planId);
+        cout << plan.toString() <<endl;
     
-    complete();
+        complete();
+    }
+
 }
 
 PrintPlanStatus * PrintPlanStatus::clone() const{return new PrintPlanStatus(*this);}
@@ -190,7 +193,7 @@ void RestoreSimulation:: act(Simulation &simulation) {
 }
 
 RestoreSimulation *RestoreSimulation::clone() const {
-    return new RestoreSimulation();
+    return new RestoreSimulation(*this);
 }
 
 const string RestoreSimulation:: toString() const {
