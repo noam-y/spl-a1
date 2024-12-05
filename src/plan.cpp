@@ -36,10 +36,9 @@ status(other.status),
 facilityOptions(other.facilityOptions),
 life_quality_score(other.life_quality_score),
 economy_score(other.economy_score),
+facilities(), underConstruction(),
 environment_score(other.environment_score), constructionLimit(other.constructionLimit){
     selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
-    vector<Facility*> facilities; 
-    vector<Facility*> underConstruction;
     
     for (std::size_t i = 0; i < other.facilities.size(); i++) {
     facilities.push_back(other.facilities.at(i)->clone());
@@ -66,6 +65,8 @@ constructionLimit(other.constructionLimit){
     selectionPolicy=other.selectionPolicy;
     other.selectionPolicy = nullptr;
 }
+
+
 
 
 //TODO: COPY CONSTRUCTOR destructor, copy constructor, HALF RULE OF FIVE- EXPLAINED IN FORUM
@@ -189,6 +190,31 @@ const string Plan::toString() const{
         s = s + "\n Facility name: " + getFacilities().at(i)->getName() + " status: OPERATIONAL";
     }
     return s;
+}
+
+void Plan::addInfo(const Plan& other){
+    // this func adds info about facilities, facilities underconsruction, and scores.
+    // mainly for restore action
+    life_quality_score = other.getlifeQualityScore();
+    environment_score = other.getEnvironmentScore();
+    economy_score = other.getEconomyScore();
+
+    plan_id = other.plan_id;
+    status = other.status;
+    // copying facilites- 
+
+    for (int i = 0;  static_cast<std::size_t>(i) <other.facilities.size() ; i++){
+        facilities.push_back(new Facility(*other.facilities.at(i)));
+    }
+
+    //copying underconstruction
+    underConstruction.clear();
+    for (int i = 0;  static_cast<std::size_t>(i) <other.underConstruction.size() ; i++){
+        underConstruction.push_back(new Facility(*other.underConstruction.at(i)));
+    }
+
+
+
 }
 
 

@@ -148,12 +148,9 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),
           this->getSettlement(p.getSettlement().getName()), 
           p.getSelectionPolicy()->clone(), 
           facilitiesOptions);
-
+        pnew.addInfo(p);
           plans.push_back(pnew);
     }
-
-
-
 }
 
 
@@ -187,6 +184,7 @@ Simulation& Simulation::operator=(const Simulation& other) {
                     this->getSettlement(p.getSettlement().getName()), 
                     p.getSelectionPolicy()->clone(), 
                     facilitiesOptions);
+                pnew.addInfo(p);
                 plans.push_back(pnew);
             }
 
