@@ -71,27 +71,32 @@ void Simulation::initializeFile(const std::string &configFilePath) {
 
         string policyName = parsedArgs[2];
 
-            if (policyName == "bal") {
-                SelectionPolicy* bal = new BalancedSelection(0,0,0); 
-                plans.push_back(Plan(planCounter,*sName,bal,facilitiesOptions));  
-            } 
-            else if (policyName== "eco") {
-                SelectionPolicy* eco = new EconomySelection ();
-                plans.push_back(Plan(planCounter,*sName,eco,facilitiesOptions));  
-            }
-            else if (policyName == "env") {
-                SelectionPolicy* env = new SustainabilitySelection();  
-                plans.push_back(Plan(planCounter,*sName,env,facilitiesOptions));  
-            } 
-            else if (policyName == "nve") {
-                SelectionPolicy* nav = new NaiveSelection();
-                plans.push_back(Plan(planCounter,*sName,nav,facilitiesOptions));  
-            }
-            else {
-                throw std::runtime_error("non existent selection policy");
-            }
+        if (policyName == "bal") {
+            SelectionPolicy* bal = new BalancedSelection(0,0,0); 
+            plans.push_back(Plan(planCounter,*sName,bal,facilitiesOptions));  
+            //addPlan(*sName,new BalancedSelection(0,0,0));  
             
-            planCounter++;
+        } 
+        else if (policyName== "eco") {
+            SelectionPolicy* eco = new EconomySelection ();
+            plans.push_back(Plan(planCounter,*sName,eco,facilitiesOptions));  
+            //addPlan(*sName,new EconomySelection());  
+        }
+        else if (policyName == "env") {
+            SelectionPolicy* env = new SustainabilitySelection();  
+            plans.push_back(Plan(planCounter,*sName,env,facilitiesOptions));  
+            //addPlan(*sName, new SustainabilitySelection());
+        } 
+        else if (policyName == "nve") {
+            SelectionPolicy* nav = new NaiveSelection();
+            plans.push_back(Plan(planCounter,*sName,nav,facilitiesOptions));  
+            //addPlan(*sName,new NaiveSelection()); 
+        }
+        else {
+            throw std::runtime_error("non existent selection policy");
+        }
+        
+        planCounter++;
         }
                 
     }

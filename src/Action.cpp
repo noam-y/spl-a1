@@ -155,13 +155,13 @@ BackupSimulation:: BackupSimulation() {}
 
 void BackupSimulation:: act(Simulation &simulation) {
     // Delete the previous backup if exists
-    if (backup != nullptr) {
-        delete backup;
-        backup = nullptr;
+    if (backup == nullptr) {
+        backup = new Simulation(simulation); 
+    }
+    else{
+        *backup = simulation;
     }
 
-    // Create a deep copy of the current simulation
-    backup = new Simulation(simulation); 
 
     complete();
 }

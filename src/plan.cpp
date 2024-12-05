@@ -119,10 +119,6 @@ void Plan::step(){
         std::cerr << "Error: facilityOptions is empty!" << std::endl;
         return;
         }
-
-        std::cout << "Debug: Calling selectFacility..." << std::endl;
-        std::cout << "Number of facilities: " << facilityOptions.size() << std::endl;
-
         FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
         Facility* toBuild = new Facility(typeBuild, settlement.getName());
         addFacility(toBuild);
@@ -198,7 +194,7 @@ const string Plan::toString() const{
 
 Plan::~Plan() {
     delete selectionPolicy;
-    
+    selectionPolicy = nullptr;
     for (int i = 0; static_cast<std::size_t>(i) <facilities.size() ; i++){
         delete facilities.at(i);
     }
