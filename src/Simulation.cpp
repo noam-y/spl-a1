@@ -127,9 +127,15 @@ Simulation::~Simulation() {
 Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),                   
       planCounter(other.planCounter),               
       actionsLog(),                                                        
-      settlements(),                                
+      settlements(),    
+      plans(),                           
       facilitiesOptions(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) {  
-    vector<Plan> plans;
+
+    // Deep copy actions
+    for (const BaseAction* a : other.actionsLog) {
+        actionsLog.push_back(a->clone()); // Clone each action
+    }
+
     // Deep copy settlements
     for (const Settlement* s : other.settlements) {
         settlements.push_back(new Settlement(*s)); // Deep copy each settlement
@@ -138,7 +144,7 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),
     // Deep copy plan, since it has resources.
     for (const Plan &p : other.plans)
     {
-        Plan pnew(p.getID(), 
+        Plan pnew = Plan (p.getID(), 
           this->getSettlement(p.getSettlement().getName()), 
           p.getSelectionPolicy()->clone(), 
           facilitiesOptions);
@@ -147,10 +153,7 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),
     }
 
 
-    // Deep copy actions
-    for (const BaseAction* a : other.actionsLog) {
-        actionsLog.push_back(a->clone()); // Clone each action
-    }
+
 }
 
 
@@ -168,29 +171,35 @@ Simulation& Simulation::operator=(const Simulation& other) {
             }
             actionsLog.clear();
 
-        isRunning= other.isRunning;
-        planCounter= other.planCounter;
-        // Clear existing plans
-         plans.clear();
+            isRunning= other.isRunning;
+            planCounter= other.planCounter;
+            // Clear existing plans
+            
+            for (const Settlement* s: other.settlements){
+                settlements.push_back(new Settlement(*s));
+            }
 
-        for (const Plan& p : other.plans)
-        {
-            Plan pnew(p.getID(), 
-          this->getSettlement(p.getSettlement().getName()), 
-          p.getSelectionPolicy()->clone(), 
-          facilitiesOptions);
-        }
+            // deep copying plans- currenty without underconstruction
+            plans.clear();
+            for (const Plan& p : other.plans)
+            {
+                Plan pnew = Plan(p.getID(), 
+                    this->getSettlement(p.getSettlement().getName()), 
+                    p.getSelectionPolicy()->clone(), 
+                    facilitiesOptions);
+                plans.push_back(pnew);
+            }
+
+            
         
-        facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
-        //deep dopy:
-        for (const Settlement* s: other.settlements){
-            settlements.push_back(new Settlement(*s));
-        }
-        for (const BaseAction* a : other.actionsLog){
-            this->actionsLog.push_back(a->clone());
-        }
+            facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
+            //deep dopy:
+
+            for (const BaseAction* a : other.actionsLog){
+                this->actionsLog.push_back(a->clone());
+            }
    
-    }
+        }
     return *this;
 }
 
@@ -231,7 +240,7 @@ Simulation& Simulation::operator=(Simulation&& other) noexcept {
         planCounter = other.planCounter;
         settlements = other.settlements;
         actionsLog = other.actionsLog;
-        vector<Plan> plans;
+        //vector<Plan> plans;
         for (int i = 0;  static_cast<std::size_t>(i) <other.plans.size(); i++){
             plans.push_back(Plan(other.plans.at(i)));
         }
