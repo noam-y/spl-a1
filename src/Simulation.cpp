@@ -317,8 +317,7 @@ void Simulation::start(){
                 }
                 else if(requestedAction == "changePolicy")
                 {
-                    ChangePlanPolicy* planPolicyChange = new ChangePlanPolicy(std::stoi(arguments[1]),arguments[2]);
-                    action = planPolicyChange;
+                    action = new ChangePlanPolicy(std::stoi(arguments[1]),arguments[2]);
                 }
                 else if(requestedAction == "log")
                 {
