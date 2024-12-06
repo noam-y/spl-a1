@@ -20,9 +20,8 @@ status(PlanStatus::AVALIABLE),
 facilityOptions(facilityOptions),
 life_quality_score(0), 
 economy_score(0), 
-environment_score(0){
-    vector<Facility*> facilities; //TODO FIX
-    vector<Facility*> underConstruction;
+environment_score(),
+facilities(), underConstruction(){
     constructionLimit = settlement.getConstructionLimit();
 }
 
@@ -78,8 +77,6 @@ constructionLimit(other.constructionLimit){
 
 
 
-//TODO: COPY CONSTRUCTOR destructor, copy constructor, HALF RULE OF FIVE- EXPLAINED IN FORUM
-
 const Settlement& Plan::getSettlement() const{
     return settlement;
 }
@@ -119,39 +116,29 @@ void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
 
 
 void Plan::step(){
-    while (status == PlanStatus::AVALIABLE){
-        if (selectionPolicy == nullptr) {
-        std::cerr << "Error: selectionPolicy is nullptr!" << std::endl;
-        return;
-        }
 
-        if (facilityOptions.empty()) {
-        std::cerr << "Error: facilityOptions is empty!" << std::endl;
-        return;
-        }
-        FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
-        cout << "SETTLEMENTNAME "+ typeBuild.getName();
-        Facility* toBuild = new Facility(typeBuild, settlement.getName());
-
-        std::cout << "Allocated Facility at: " << toBuild << std::endl;
-
-
-
-        addFacility(toBuild); // will be added to under construction
-        constructionLimit = constructionLimit -1;
-        if (constructionLimit == 0){
-            status = PlanStatus::BUSY;
-        }
+    while (constructionLimit > 0){
+            Facility* toBuild = new Facility(selectionPolicy->selectFacility(facilityOptions), settlement.getName());
+            try {
+                addFacility(toBuild);
+                constructionLimit = constructionLimit -1;
+            } catch (...) {
+                delete toBuild; // Clean up memory if something goes wrong
+                throw;          // Re-throw the exception
+            }
+            
     }
-    for (std::size_t i = underConstruction.size(); i-- > 0;){
+        
+    for (size_t i = 0; i < underConstruction.size();){
         FacilityStatus f1 = underConstruction.at(i)->step();
         if (f1 == FacilityStatus::OPERATIONAL){
-            facilities.push_back(underConstruction.at(i));
+            addFacility(underConstruction.at(i));
             underConstruction.erase(underConstruction.begin() + i);
-            //addFacility(underConstruction.at(i));
-            //underConstruction.erase(underConstruction.begin() + i);
             // we now have more space availiable to construction
             constructionLimit = constructionLimit + 1;
+        }
+        else{
+            i++;
         }
     }
 
@@ -181,6 +168,10 @@ const vector<Facility*> &Plan::getFacilities() const{
 }
 
 void Plan::addFacility(Facility* facility){
+    if (!facility) {
+    std::cerr << "Error: Null pointer passed to addFacility!" << std::endl;
+    return; // Do not proceed
+    }
     if ((facility->getStatus()) == FacilityStatus::OPERATIONAL){
         facilities.push_back(facility);
         this->economy_score = this->economy_score + facility->getEconomyScore();
@@ -199,7 +190,6 @@ string s = "planID: " + to_string(this->plan_id) + "\n" + "Settlement Name: " + 
 "\n planStatus " + this->getStatusString() + "\n selectionPolicy: "
 + this->getSelectionPolicy()->toString() + "\n life quality: " + to_string(this->getlifeQualityScore()) +
 "\n economy score: " + to_string(this->getEconomyScore()) + "\n enviroment Score:" + to_string (this->getEnvironmentScore());
- //TODO
 for (std::size_t i = 0; i < this->underConstruction.size(); ++i) {
     s += "\n" + underConstruction.at(i)->toString() + " status: UNDERCONSTRUCTION";
 }

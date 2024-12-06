@@ -28,7 +28,7 @@ void BaseAction::complete(){status = ActionStatus::COMPLETED;}
 void BaseAction::error(string errorMsg){
     status = ActionStatus::ERROR;
     cout << errorMsg << endl;
-} // TODO
+} 
 const string& BaseAction::getErrorMsg() const{
     return errorMsg;
 }
@@ -222,7 +222,7 @@ const string RestoreSimulation:: toString() const {
 
  void ChangePlanPolicy::act(Simulation &simulation){
     if (simulation.getPlanCount() > planId){
-        /////////// TODO
+        error("plan does not exist");
     }
     Plan& p = simulation.getPlan(planId);
     cout << "plan id: "  + to_string(planId) + "\n old policy: " + p.getSelectionPolicy()->toString() << endl;

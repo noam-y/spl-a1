@@ -32,7 +32,6 @@ using namespace std;
             if (timeLeft == 0){
                 setStatus(FacilityStatus::OPERATIONAL);
                 return FacilityStatus::OPERATIONAL;
-                //Plan::addFacility(*this); TODO
             }
             else{
                 return FacilityStatus::UNDER_CONSTRUCTIONS;
@@ -49,8 +48,6 @@ using namespace std;
         const string Facility::toString() const{
             string s = "Facility Name: " + getName() ;
             return s;
-
-            //TODO check official tostring guide
         }
 
         const string settlementName;

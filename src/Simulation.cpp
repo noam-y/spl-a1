@@ -45,7 +45,7 @@ void Simulation::initializeFile(const std::string &configFilePath) {
             int environmentScore = std::stoi(parsedArgs[6]);
             //checks if the facility allready exist
             bool isExist = false;
-            for (std::size_t i = 0; i < facilitiesOptions.size(); i++){ // TODO UNDERSTAND
+            for (std::size_t i = 0; i < facilitiesOptions.size() & !isExist; i++){
                 if (fName == facilitiesOptions[i].getName()){
                     isExist = true;
                 }
@@ -181,8 +181,6 @@ Simulation& Simulation::operator=(const Simulation& other) {
             for (const FacilityType& facility : other.facilitiesOptions){
                 facilitiesOptions.push_back(facility);
             }
-            //deep dopy:
-
 
             isRunning= other.isRunning;
             planCounter= other.planCounter;
@@ -203,16 +201,10 @@ Simulation& Simulation::operator=(const Simulation& other) {
                 pnew.addInfo(p);
                 plans.push_back(pnew);
             }
-
-            
-        
             facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
-
-
             for (const BaseAction* a : other.actionsLog){
                 actionsLog.push_back(a->clone());
             }
-   
         }
     return *this;
 }

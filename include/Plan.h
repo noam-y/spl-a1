@@ -35,6 +35,7 @@ class Plan {
         const int getID() const;
         const vector<FacilityType> getFacilityOptions() const;
         void addInfo(const Plan& other);
+        bool Plan::facilityExists(Facility* facility) const;
         
     private:
         int plan_id;
