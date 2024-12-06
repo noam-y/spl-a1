@@ -47,7 +47,7 @@ life_quality_score(other.life_quality_score),
 economy_score(other.economy_score),
 facilities(), underConstruction(),
 environment_score(other.environment_score), constructionLimit(other.constructionLimit){
-    selectionPolicy = other.selectionPolicy->clone(); // TODO IF OTHER.SELPOLICY IS NULL
+    selectionPolicy = other.selectionPolicy->clone(); 
     
     for (std::size_t i = 0; i < other.facilities.size(); i++) {
     facilities.push_back(other.facilities.at(i)->clone());
@@ -205,7 +205,7 @@ for (std::size_t i = 0; i < this->underConstruction.size(); ++i) {
 }
 
 for (std::size_t i = 0; i <this->getFacilities().size() ; i++){
-    s += "\n" + underConstruction.at(i)->toString() + " status: OPERATIONAL";
+    s += "\n" + getFacilities().at(i)->toString() + " status: OPERATIONAL";
 }
 
 return s;

@@ -5,10 +5,10 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "enter program name, for example ${workspaceFolder}/a.out",
+            "program": "{workspaceFolder}/skeleton/bin/program",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "{workspaceFolder}/bin/program",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -30,7 +30,7 @@
             "name": "(gdb) Attach",
             "type": "cppdbg",
             "request": "attach",
-            "program": "enter program name, for example ${workspaceFolder}/a.out",
+            "program": "{workspaceFolder}/bin/program",
             "MIMode": "gdb",
             "setupCommands": [
                 {
