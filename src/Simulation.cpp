@@ -123,11 +123,6 @@ Simulation::~Simulation() {
         delete a;
     }
 
-    for (Plan p: plans){
-        for (Facility* f : p.getFacilities()){
-            delete f;
-        }
-    }
     actionsLog.clear();
 }
 
