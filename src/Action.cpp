@@ -228,28 +228,34 @@ const string RestoreSimulation:: toString() const {
         Plan& p = simulation.getPlan(planId);
         cout << "plan id: "  + to_string(planId) + "\n old policy: " + p.getSelectionPolicy()->toString() << endl;
         if (newPolicy == "bal"){
-            if (p.getSelectionPolicy()->toString() != "bal"){
-                p.setSelectionPolicy(new BalancedSelection(simulation.getPlan(planId).getlifeQualityScore(),
-                simulation.getPlan(planId).getEconomyScore(),
-                simulation.getPlan(planId).getEnvironmentScore()));
+            BalancedSelection* newBal = new BalancedSelection(simulation.getPlan(planId).getlifeQualityScore(),
+            simulation.getPlan(planId).getEconomyScore(),
+            simulation.getPlan(planId).getEnvironmentScore());
+            for (Facility* f: simulation.getPlan(planId).getUnderConstruction()){
+                newBal->addScore(f->getLifeQualityScore(), f->getEconomyScore(), f->getEnvironmentScore());
             }
-            
+            p.setSelectionPolicy(newBal);
+            cout << "\n new policy:" + p.getSelectionPolicy()->toString() <<endl;
+            complete();
         }
         else if (newPolicy == "nve"){
             p.setSelectionPolicy( new NaiveSelection());
+            cout << "\n new policy:" + p.getSelectionPolicy()->toString() <<endl;
+            complete();
         }
         else if(newPolicy == "eco"){
             p.setSelectionPolicy(new EconomySelection());
+            cout << "\n new policy:" + p.getSelectionPolicy()->toString() <<endl;
+            complete();
         }
         else if(newPolicy == "env"){
             p.setSelectionPolicy(new SustainabilitySelection());
+            cout << "\n new policy:" + p.getSelectionPolicy()->toString() <<endl;
+            complete();
         }
         else{
             error( "no selection given- ERROR" );
         }
-        cout << "\n new policy:" + p.getSelectionPolicy()->toString() <<endl;
-        complete();
-
     }
  }
 

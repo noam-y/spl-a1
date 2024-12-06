@@ -74,6 +74,12 @@ const FacilityType &BalancedSelection::selectFacility(const vector<FacilityType>
     return BestFacility;
 }
 
+const string BalancedSelection::addScore(int lifeadd,int ecoAdd,int envAdd){
+    LifeQualityScore = LifeQualityScore + lifeadd;
+    EconomyScore = EconomyScore + ecoAdd;
+    EnvironmentScore = EnvironmentScore + envAdd;
+}
+
 // Implement with  3 scores
 const string BalancedSelection::toString() const {
     return "bal";
