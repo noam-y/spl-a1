@@ -20,7 +20,7 @@ status(PlanStatus::AVALIABLE),
 facilityOptions(facilityOptions),
 life_quality_score(0), 
 economy_score(0), 
-environment_score(),
+environment_score(0),
 facilities(), underConstruction(){
     constructionLimit = settlement.getConstructionLimit();
 }
@@ -65,11 +65,15 @@ economy_score(other.economy_score),
 environment_score(other.environment_score),
 constructionLimit(other.constructionLimit){
     for (int i = 0;  static_cast<std::size_t>(i) <other.facilities.size() ; i++){
+        facilities.push_back(other.facilities[i]);
         other.facilities.at(i) = nullptr;
     }
     for (int i = 0;  static_cast<std::size_t>(i) <other.underConstruction.size() ; i++){
+        underConstruction.push_back(other.underConstruction[i]);
         other.underConstruction.at(i) = nullptr;
     }
+    other.underConstruction.clear();
+    other.facilities.clear();
     selectionPolicy=other.selectionPolicy;
     other.selectionPolicy = nullptr;
 }
@@ -85,7 +89,7 @@ const PlanStatus Plan::getStatus() const{
     return status;
 }
 
-const SelectionPolicy* Plan::getSelectionPolicy() const{
+SelectionPolicy* Plan::getSelectionPolicy() const{
     return selectionPolicy;
 
 }
@@ -108,7 +112,7 @@ const int Plan::getEnvironmentScore() const{
     return environment_score;
 }
 void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
-    if (selectionPolicy != nullptr){
+    if (this->selectionPolicy != nullptr){
         delete this->selectionPolicy;
     }
      this->selectionPolicy = selectionPolicy;
@@ -119,14 +123,8 @@ void Plan::step(){
 
     while (constructionLimit > 0){
             Facility* toBuild = new Facility(selectionPolicy->selectFacility(facilityOptions), settlement.getName());
-            try {
-                addFacility(toBuild);
-                constructionLimit = constructionLimit -1;
-            } catch (...) {
-                delete toBuild; // Clean up memory if something goes wrong
-                throw;          // Re-throw the exception
-            }
-            
+            addFacility(toBuild);
+            constructionLimit = constructionLimit -1;
     }
         
     for (size_t i = 0; i < underConstruction.size();){
@@ -230,9 +228,11 @@ underConstruction.clear();
 
 
 Plan::~Plan() {
-    delete selectionPolicy;
-    selectionPolicy = nullptr;
+    if (selectionPolicy){
+        delete selectionPolicy;
+    }
     for (int i = 0; static_cast<std::size_t>(i) <facilities.size() ; i++){
+        if (facilities.at(i) != nullptr)
         delete facilities.at(i);
         facilities.at(i) = nullptr;
     }

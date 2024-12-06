@@ -224,30 +224,33 @@ const string RestoreSimulation:: toString() const {
     if (simulation.getPlanCount() > planId){
         error("plan does not exist");
     }
-    Plan& p = simulation.getPlan(planId);
-    cout << "plan id: "  + to_string(planId) + "\n old policy: " + p.getSelectionPolicy()->toString() << endl;
-    if (newPolicy == "bal"){
-        if (p.getSelectionPolicy()->toString() != "bal"){
-            p.setSelectionPolicy(new BalancedSelection(simulation.getPlan(planId).getlifeQualityScore(),
-            simulation.getPlan(planId).getEconomyScore(),
-            simulation.getPlan(planId).getEnvironmentScore()));
-        }
-        
-    }
-    else if (newPolicy == "nve"){
-        p.setSelectionPolicy( new NaiveSelection());
-    }
-    else if(newPolicy == "eco"){
-        p.setSelectionPolicy(new EconomySelection());
-    }
-    else if(newPolicy == "env"){
-        p.setSelectionPolicy(new SustainabilitySelection());
-    }
     else{
-        error( "no selection given- ERROR" );
+        Plan& p = simulation.getPlan(planId);
+        cout << "plan id: "  + to_string(planId) + "\n old policy: " + p.getSelectionPolicy()->toString() << endl;
+        if (newPolicy == "bal"){
+            if (p.getSelectionPolicy()->toString() != "bal"){
+                p.setSelectionPolicy(new BalancedSelection(simulation.getPlan(planId).getlifeQualityScore(),
+                simulation.getPlan(planId).getEconomyScore(),
+                simulation.getPlan(planId).getEnvironmentScore()));
+            }
+            
+        }
+        else if (newPolicy == "nve"){
+            p.setSelectionPolicy( new NaiveSelection());
+        }
+        else if(newPolicy == "eco"){
+            p.setSelectionPolicy(new EconomySelection());
+        }
+        else if(newPolicy == "env"){
+            p.setSelectionPolicy(new SustainabilitySelection());
+        }
+        else{
+            error( "no selection given- ERROR" );
+        }
+        cout << "\n new policy:" + p.getSelectionPolicy()->toString() <<endl;
+        complete();
+
     }
-    cout << "\n new policy:" + p.getSelectionPolicy()->toString() <<endl;
-    complete();
  }
 
 

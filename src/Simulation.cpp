@@ -153,9 +153,9 @@ Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),
     // Deep copy plan, since it has resources.
     for (const Plan &p : other.plans)
     {
-        Plan pnew = Plan (p.getID(), 
+        Plan pnew = Plan(p.getID(), 
           this->getSettlement(p.getSettlement().getName()), 
-          p.getSelectionPolicy()->clone(), 
+          p.getSelectionPolicy(), 
           facilitiesOptions);
         pnew.addInfo(p);
           plans.push_back(pnew);
@@ -196,7 +196,7 @@ Simulation& Simulation::operator=(const Simulation& other) {
             {
                 Plan pnew = Plan(p.getID(), 
                     this->getSettlement(p.getSettlement().getName()), 
-                    p.getSelectionPolicy()->clone(), 
+                    p.getSelectionPolicy(), 
                     facilitiesOptions); //AAAAAAAAAAAAAA
                 pnew.addInfo(p);
                 plans.push_back(pnew);
@@ -372,7 +372,8 @@ void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectio
         planCounter++;
         Plan p = Plan(planID, settlement, selectionPolicy, this->facilitiesOptions);
         plans.push_back(p);
- } //DEBUGG HERE IS GOOD
+        
+ } 
 
 void Simulation:: addAction(BaseAction *action){
     actionsLog.push_back(action);

@@ -30,12 +30,11 @@ class Plan {
         const string getStatusString() const;
         const Settlement& getSettlement() const;
         const PlanStatus getStatus() const;
-        const SelectionPolicy* getSelectionPolicy() const;
+        SelectionPolicy* getSelectionPolicy() const;
         vector<Facility*> getUnderConstruction();
         const int getID() const;
         const vector<FacilityType> getFacilityOptions() const;
         void addInfo(const Plan& other);
-        bool Plan::facilityExists(Facility* facility) const;
         
     private:
         int plan_id;
