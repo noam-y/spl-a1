@@ -68,7 +68,10 @@ void AddPlan::act(Simulation &simulation){
     else{
         error("selectionPolicyDoes not exist");
     }
+    
     simulation.addPlan(stl, selectP);
+    delete selectP;
+    selectP = nullptr;
     complete();
 }
 
@@ -88,7 +91,9 @@ void AddSettlement::act(Simulation &simulation) {
     Settlement *stl = new Settlement(settlementName,settlementType);
     bool status = simulation.addSettlement(stl);
     if (status){complete();}
-    else{error("action AddSettlement not complete");}
+    else{
+        delete stl;
+        error("action AddSettlement not complete");}
 }
 
 AddSettlement* AddSettlement::clone() const {
@@ -159,6 +164,7 @@ void BackupSimulation:: act(Simulation &simulation) {
         backup = new Simulation(simulation); 
     }
     else{
+        delete backup;
         *backup = simulation;
     }
 
@@ -185,7 +191,7 @@ void RestoreSimulation:: act(Simulation &simulation) {
         cout << getErrorMsg() << endl;
     }
     else {
-        simulation = *backup;
+        simulation = (*backup);
         complete();
 
     }
@@ -197,7 +203,16 @@ RestoreSimulation *RestoreSimulation::clone() const {
 }
 
 const string RestoreSimulation:: toString() const {
-    
+    if (getStatus() == ActionStatus::COMPLETED) {
+        return "restore COMPLETED";
+    } 
+    else if (getStatus() == ActionStatus::ERROR) {
+        return "restore ERROR";
+    }
+    else {
+        return "restore Unknown";
+    }
+    return "";
 }
 
 
@@ -206,6 +221,9 @@ const string RestoreSimulation:: toString() const {
 
 
  void ChangePlanPolicy::act(Simulation &simulation){
+    if (simulation.getPlanCount() > planId){
+        /////////// TODO
+    }
     Plan& p = simulation.getPlan(planId);
     cout << "plan id: "  + to_string(planId) + "\n old policy: " + p.getSelectionPolicy()->toString() << endl;
     if (newPolicy == "bal"){
@@ -233,7 +251,7 @@ const string RestoreSimulation:: toString() const {
  }
 
 
- 
+
 ChangePlanPolicy *ChangePlanPolicy::clone() const{return new ChangePlanPolicy(*this);}
 const string ChangePlanPolicy::toString() const{return "Change policy for id" + to_string(planId) 
 + "\n policy" + newPolicy;}

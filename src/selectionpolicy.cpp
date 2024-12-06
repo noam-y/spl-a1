@@ -93,32 +93,12 @@ EconomySelection::EconomySelection(const EconomySelection &other) : lastSelected
 
 const FacilityType &EconomySelection::selectFacility(const vector<FacilityType> &facilitiesOptions)
 {
-    if (facilitiesOptions.empty())
-    {
-        throw std::out_of_range("No facility invalid for selection");
+    bool facilityFound = false;
+    while (!facilityFound){
+        lastSelectedIndex = (lastSelectedIndex + 1) % facilitiesOptions.size();
+        facilityFound = facilitiesOptions[lastSelectedIndex].getCategory() == FacilityCategory::ECONOMY;
     }
-
-    vector<int> indexesList;
-    lastSelectedIndex++;
-    int curr = 0;
-    for (const FacilityType &facility : facilitiesOptions)
-    {
-        if (facility.getCategory() == FacilityCategory::ECONOMY)
-        {
-            indexesList.push_back(curr);
-        }
-        curr++;
-    }
-    if (indexesList.empty())
-    {
-        throw std::out_of_range("No ECONOMY facilities for selection");
-    }
-
-    // Update the lastSelectedIndex to the next valid index in a circular manner
-    lastSelectedIndex = (lastSelectedIndex + 1) % indexesList.size();
-
-    // Return the facility at the selected index
-    return facilitiesOptions.at(indexesList[lastSelectedIndex]);
+    return facilitiesOptions[lastSelectedIndex];
 }
 
 const string EconomySelection::toString() const

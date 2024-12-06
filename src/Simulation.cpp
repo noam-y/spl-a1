@@ -73,23 +73,27 @@ void Simulation::initializeFile(const std::string &configFilePath) {
 
         if (policyName == "bal") {
             SelectionPolicy* bal = new BalancedSelection(0,0,0); 
-            plans.push_back(Plan(planCounter,*sName,bal,facilitiesOptions));  
+            plans.push_back(Plan(planCounter,*sName,bal,facilitiesOptions)); 
+            delete bal; 
             //addPlan(*sName,new BalancedSelection(0,0,0));  
             
         } 
         else if (policyName== "eco") {
             SelectionPolicy* eco = new EconomySelection ();
             plans.push_back(Plan(planCounter,*sName,eco,facilitiesOptions));  
+            delete eco;
             //addPlan(*sName,new EconomySelection());  
         }
         else if (policyName == "env") {
             SelectionPolicy* env = new SustainabilitySelection();  
             plans.push_back(Plan(planCounter,*sName,env,facilitiesOptions));  
+            delete env;
             //addPlan(*sName, new SustainabilitySelection());
         } 
         else if (policyName == "nve") {
             SelectionPolicy* nav = new NaiveSelection();
             plans.push_back(Plan(planCounter,*sName,nav,facilitiesOptions));  
+            delete nav;
             //addPlan(*sName,new NaiveSelection()); 
         }
         else {
@@ -118,6 +122,12 @@ Simulation::~Simulation() {
     for (BaseAction* a : actionsLog) {
         delete a;
     }
+
+    for (Plan p: plans){
+        for (Facility* f : p.getFacilities()){
+            delete f;
+        }
+    }
     actionsLog.clear();
 }
 
@@ -127,8 +137,7 @@ Simulation::~Simulation() {
 Simulation::Simulation(const Simulation& other): isRunning(other.isRunning),                   
       planCounter(other.planCounter),               
       actionsLog(),                                                        
-      settlements(),    
-      plans(),                           
+      plans(), settlements(),                      
       facilitiesOptions(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) {  
 
     // Deep copy actions
@@ -167,6 +176,13 @@ Simulation& Simulation::operator=(const Simulation& other) {
                 delete a;
             }
             actionsLog.clear();
+            
+            facilitiesOptions.clear();
+            for (const FacilityType& facility : other.facilitiesOptions){
+                facilitiesOptions.push_back(facility);
+            }
+            //deep dopy:
+
 
             isRunning= other.isRunning;
             planCounter= other.planCounter;
@@ -183,7 +199,7 @@ Simulation& Simulation::operator=(const Simulation& other) {
                 Plan pnew = Plan(p.getID(), 
                     this->getSettlement(p.getSettlement().getName()), 
                     p.getSelectionPolicy()->clone(), 
-                    facilitiesOptions);
+                    facilitiesOptions); //AAAAAAAAAAAAAA
                 pnew.addInfo(p);
                 plans.push_back(pnew);
             }
@@ -191,10 +207,10 @@ Simulation& Simulation::operator=(const Simulation& other) {
             
         
             facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions.begin(), other.facilitiesOptions.end()) ;
-            //deep dopy:
+
 
             for (const BaseAction* a : other.actionsLog){
-                this->actionsLog.push_back(a->clone());
+                actionsLog.push_back(a->clone());
             }
    
         }
@@ -342,6 +358,7 @@ void Simulation::start(){
 
                 if (action == nullptr){
                     cout << "invalid action" << endl;
+                    delete action;
                 }
                 else{
                     action->act(*this);

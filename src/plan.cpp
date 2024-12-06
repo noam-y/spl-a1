@@ -15,7 +15,7 @@ SelectionPolicy *selectionPolicy,
 const vector<FacilityType> &facilityOptions):
 plan_id(planId),
 settlement(settlement), 
-selectionPolicy(selectionPolicy), 
+selectionPolicy(selectionPolicy->clone()), 
 status(PlanStatus::AVALIABLE),
 facilityOptions(facilityOptions),
 life_quality_score(0), 
@@ -26,8 +26,17 @@ environment_score(0){
     constructionLimit = settlement.getConstructionLimit();
 }
 
-Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions, int LifeScore, int EconomyScore, int EnviromentScore) 
-: plan_id(planId), settlement(settlement), selectionPolicy(selectionPolicy), status(PlanStatus::AVALIABLE), facilities(), underConstruction(), facilityOptions(facilityOptions), life_quality_score(0), economy_score(0), environment_score(0){}
+Plan::Plan(const int planId, const Settlement &settlement,
+SelectionPolicy *selectionPolicy, const vector<FacilityType> &facilityOptions,
+int LifeScore, int EconomyScore, int EnviromentScore) 
+: plan_id(planId),
+settlement(settlement),
+selectionPolicy(selectionPolicy->clone()),
+status(PlanStatus::AVALIABLE), facilities(), underConstruction(),
+facilityOptions(facilityOptions), life_quality_score(0),
+ economy_score(0), environment_score(0){
+
+ }
 
 
 Plan::Plan(const Plan& other):plan_id(other.plan_id),
@@ -106,7 +115,7 @@ void Plan::setSelectionPolicy(SelectionPolicy *selectionPolicy){
         delete this->selectionPolicy;
     }
      this->selectionPolicy = selectionPolicy;
-     };// TODO destruct prev selection policy
+     };
 
 
 void Plan::step(){
@@ -121,9 +130,14 @@ void Plan::step(){
         return;
         }
         FacilityType typeBuild = selectionPolicy->selectFacility(facilityOptions);
+        cout << "SETTLEMENTNAME "+ typeBuild.getName();
         Facility* toBuild = new Facility(typeBuild, settlement.getName());
+
+        std::cout << "Allocated Facility at: " << toBuild << std::endl;
+
+
+
         addFacility(toBuild); // will be added to under construction
-        // TODO UPDATE BALANCED_SCORES VALUES
         constructionLimit = constructionLimit -1;
         if (constructionLimit == 0){
             status = PlanStatus::BUSY;
@@ -132,8 +146,10 @@ void Plan::step(){
     for (std::size_t i = underConstruction.size(); i-- > 0;){
         FacilityStatus f1 = underConstruction.at(i)->step();
         if (f1 == FacilityStatus::OPERATIONAL){
-            addFacility(underConstruction.at(i));
+            facilities.push_back(underConstruction.at(i));
             underConstruction.erase(underConstruction.begin() + i);
+            //addFacility(underConstruction.at(i));
+            //underConstruction.erase(underConstruction.begin() + i);
             // we now have more space availiable to construction
             constructionLimit = constructionLimit + 1;
         }
@@ -173,10 +189,6 @@ void Plan::addFacility(Facility* facility){
     }
     else{
         underConstruction.push_back(facility);
-
-        if (getSelectionPolicy()->toString() == "bal"){
-            // update values of balancedscores
-        }
     }
     
 }
@@ -203,13 +215,17 @@ return s;
 void Plan::addInfo(const Plan& other){
     // this func adds info about facilities, facilities underconsruction, and scores.
     // mainly for restore action
-    life_quality_score = other.getlifeQualityScore();
-    environment_score = other.getEnvironmentScore();
-    economy_score = other.getEconomyScore();
-
-    plan_id = other.plan_id;
     status = other.status;
     // copying facilites- 
+for (auto facility : facilities) {
+    delete facility;
+}
+facilities.clear();
+
+for (auto facility : underConstruction) {
+    delete facility;
+}
+underConstruction.clear();
 
     for (int i = 0;  static_cast<std::size_t>(i) <other.facilities.size() ; i++){
         facilities.push_back(new Facility(*other.facilities.at(i)));
@@ -220,9 +236,6 @@ void Plan::addInfo(const Plan& other){
     for (int i = 0;  static_cast<std::size_t>(i) <other.underConstruction.size() ; i++){
         underConstruction.push_back(new Facility(*other.underConstruction.at(i)));
     }
-
-
-
 }
 
 
@@ -231,10 +244,12 @@ Plan::~Plan() {
     selectionPolicy = nullptr;
     for (int i = 0; static_cast<std::size_t>(i) <facilities.size() ; i++){
         delete facilities.at(i);
+        facilities.at(i) = nullptr;
     }
 
     for (int i = 0; static_cast<std::size_t>(i) <underConstruction.size() ; i++){
         delete underConstruction.at(i);
+        underConstruction.at(i)= nullptr;
     }
 
 }
