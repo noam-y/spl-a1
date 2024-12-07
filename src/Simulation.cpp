@@ -225,7 +225,7 @@ Simulation& Simulation::operator=(Simulation&& other) noexcept {
 
 void Simulation::start(){
     open();
-    cout << "The simulation has started";
+    cout << "The simulation has started\n";
     while (isRunning) {
         BaseAction *action = nullptr;
         string command;

@@ -187,15 +187,15 @@ void Plan::addFacility(Facility* facility){
 const string Plan::toString() const{
   
 string s = "planID: " + to_string(this->plan_id) + "\n" + "Settlement Name: " + this->getSettlement().getName() +
-"\n planStatus " + this->getStatusString() + "\n selectionPolicy: "
-+ this->getSelectionPolicy()->toString() + "\n life quality: " + to_string(this->getlifeQualityScore()) +
-"\n economy score: " + to_string(this->getEconomyScore()) + "\n enviroment Score:" + to_string (this->getEnvironmentScore());
+"\nplanStatus " + this->getStatusString() + "\nselectionPolicy: "
++ this->getSelectionPolicy()->toString() + "\nlife quality: " + to_string(this->getlifeQualityScore()) +
+"\neconomy score: " + to_string(this->getEconomyScore()) + "\nenviroment Score:" + to_string (this->getEnvironmentScore());
 for (std::size_t i = 0; i < this->underConstruction.size(); ++i) {
-    s += "\n" + underConstruction.at(i)->toString() + " status: UNDERCONSTRUCTION";
+    s += "\n" + underConstruction.at(i)->toString() + "status: UNDERCONSTRUCTION";
 }
 
 for (std::size_t i = 0; i <this->getFacilities().size() ; i++){
-    s += "\n" + getFacilities().at(i)->toString() + " status: OPERATIONAL";
+    s += "\n" + getFacilities().at(i)->toString() + "status: OPERATIONAL";
 }
 
 return s;
