@@ -17,11 +17,13 @@ plan_id(planId),
 settlement(settlement), 
 selectionPolicy(selectionPolicy->clone()), 
 status(PlanStatus::AVALIABLE),
+facilities(),
+underConstruction(),
 facilityOptions(facilityOptions),
 life_quality_score(0), 
 economy_score(0), 
-environment_score(0),
-facilities(), underConstruction(){
+environment_score(0)
+ {
     constructionLimit = settlement.getConstructionLimit();
 }
 
@@ -41,19 +43,19 @@ facilityOptions(facilityOptions), life_quality_score(0),
 Plan::Plan(const Plan& other):plan_id(other.plan_id),
 settlement(other.settlement),
 status(other.status),
+facilities(), underConstruction(),
 facilityOptions(other.facilityOptions),
 life_quality_score(other.life_quality_score),
 economy_score(other.economy_score),
-facilities(), underConstruction(),
-environment_score(other.environment_score), constructionLimit(other.constructionLimit){
+environment_score(other.environment_score),
+constructionLimit(other.constructionLimit){
     selectionPolicy = other.selectionPolicy->clone(); 
     
     for (std::size_t i = 0; i < other.facilities.size(); i++) {
     facilities.push_back(other.facilities.at(i)->clone());
     }
     for (std::size_t i = 0; i < other.underConstruction.size(); i++) {
-    underConstruction.push_back(other.underConstruction.at(i)->clone());
-    }
+    underConstruction.push_back(other.underConstruction.at(i)->clone());}
 }
 
 Plan::Plan(Plan&& other) noexcept:plan_id(other.plan_id),

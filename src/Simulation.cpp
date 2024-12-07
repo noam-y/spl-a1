@@ -18,95 +18,54 @@ void Simulation::initializeFile(const std::string &configFilePath) {
     std::ifstream configFile(configFilePath);
     if (!configFile.is_open()) {
             throw std::runtime_error("Error: Unable to open config file: " + configFilePath);
-        }
+    }
 
-        std:: string line; 
-        while (std::getline(configFile, line)) {
-            vector<string> parsedArgs = Auxiliary::parseArguments(line);
-            if (parsedArgs.empty()) continue; //avoid unnecessary computations or potential errors.
-            //Parsing settlements
-            if (parsedArgs[0] == "settlement") {  
-            string sName = parsedArgs[1];
-            int sTypeInt = std::stoi(parsedArgs[2]);  
-            SettlementType sType = static_cast<SettlementType>(sTypeInt);  // Convert int to enum
-            if (isSettlementExists(sName)){
-                cout <<"Settlement already exist"<< endl;
-            }
+    std:: string line; 
+    while (std::getline(configFile, line)) {
+        vector<string> parsedArgs = Auxiliary::parseArguments(line);
+        if (parsedArgs.empty()) continue; //avoid unnecessary computations or potential errors.
+        //Parsing settlements
+        if (parsedArgs[0] == "settlement") {  
+            string sName = parsedArgs[1];  
+            SettlementType sType = (SettlementType)std::stoi(parsedArgs[2]);
             settlements.push_back(new Settlement(sName, sType));
         }
         //Parsing facility
         else if (parsedArgs[0] == "facility") {
-            string fName = parsedArgs[1]; 
-            int categoryInt = std::stoi(parsedArgs[2]);  // Convert string to integer
-            FacilityCategory fCategory = static_cast<FacilityCategory>(categoryInt);
+            string fName = parsedArgs[1];
+            FacilityCategory fCategory = (FacilityCategory)(std::stoi(parsedArgs[2]));
             int fPrice = std::stoi(parsedArgs[3]);
             int lifeQualityScore = std::stoi(parsedArgs[4]);
             int economyScore = std::stoi(parsedArgs[5]);
             int environmentScore = std::stoi(parsedArgs[6]);
-            //checks if the facility allready exist
-            bool isExist = false;
-            for (std::size_t i = 0; i < facilitiesOptions.size() & !isExist; i++){
-                if (fName == facilitiesOptions[i].getName()){
-                    isExist = true;
-                }
-            }
-            if (!isExist){
-                cout << "Facility is being created"<< endl;
-                facilitiesOptions.push_back(FacilityType(fName, fCategory, fPrice, lifeQualityScore, economyScore, environmentScore));
-            }
-            else{
-                cout << "facility exists" <<endl;
-            }
-            
+            facilitiesOptions.push_back(FacilityType(fName, fCategory, fPrice, lifeQualityScore, economyScore, environmentScore));
         }
         //Parsing plan
         else if (parsedArgs[0] == "plan") {
-        Settlement* sName = nullptr;
-        for (int i = 0;  static_cast<std::size_t>(i) < settlements.size() ; i++){
-            if (settlements.at(i)->getName() == parsedArgs[1] ){
-                sName = settlements.at(i);
-                break;
-                }
-        }
+            string settlementName = parsedArgs[1];
+            const Settlement &settlement = getSettlement(settlementName);
+            SelectionPolicy *selectionPolicy = nullptr;
+            string policyName = parsedArgs[2];
 
-        string policyName = parsedArgs[2];
-
-        if (policyName == "bal") {
-            SelectionPolicy* bal = new BalancedSelection(0,0,0); 
-            plans.push_back(Plan(planCounter,*sName,bal,facilitiesOptions)); 
-            delete bal; 
-            //addPlan(*sName,new BalancedSelection(0,0,0));  
-            
-        } 
-        else if (policyName== "eco") {
-            SelectionPolicy* eco = new EconomySelection ();
-            plans.push_back(Plan(planCounter,*sName,eco,facilitiesOptions));  
-            delete eco;
-            //addPlan(*sName,new EconomySelection());  
+            if (policyName == "bal") {
+                selectionPolicy = new BalancedSelection(0,0,0);  
+            } 
+            else if (policyName== "eco") {
+                selectionPolicy = new EconomySelection ();
+            }
+            else if (policyName == "env") {
+                selectionPolicy = new SustainabilitySelection();  
+            } 
+            else if (policyName == "nve") {
+                selectionPolicy = new NaiveSelection();
+            }
+            else {
+                throw std::runtime_error("non existent selection policy");
+            }
+            addPlan(settlement, selectionPolicy);
         }
-        else if (policyName == "env") {
-            SelectionPolicy* env = new SustainabilitySelection();  
-            plans.push_back(Plan(planCounter,*sName,env,facilitiesOptions));  
-            delete env;
-            //addPlan(*sName, new SustainabilitySelection());
-        } 
-        else if (policyName == "nve") {
-            SelectionPolicy* nav = new NaiveSelection();
-            plans.push_back(Plan(planCounter,*sName,nav,facilitiesOptions));  
-            delete nav;
-            //addPlan(*sName,new NaiveSelection()); 
-        }
-        else {
-            throw std::runtime_error("non existent selection policy");
-        }
-        
-        planCounter++;
-        }
-                
     }
-configFile.close();  // Close the file
-std::cout << "Simulation constructed, this = " << this << std::endl;
-
+    configFile.close();  // Close the file
 }
 
 
@@ -267,7 +226,6 @@ Simulation& Simulation::operator=(Simulation&& other) noexcept {
 void Simulation::start(){
     open();
     cout << "The simulation has started";
-    std::cout << "Simulation::start() called, this = " << this << std::endl;
     while (isRunning) {
         BaseAction *action = nullptr;
         string command;
@@ -443,7 +401,7 @@ void Simulation:: close(){
 
     for (Plan p : plans){
         string planInfo = "";
-        planInfo = "planID: " + to_string(p.getID()) + "> \n SettlementName: " + p.getSettlement().getName() + " \n LifeQualityScore: " +to_string(p.getlifeQualityScore()) + "\n EconomyScore: " + to_string(p.getEconomyScore()) + "\n EnvironmentScore:" + to_string(p.getEnvironmentScore()) + "\n";
+        planInfo = "planID: " + to_string(p.getID()) + "\n SettlementName: " + p.getSettlement().getName() + "\n LifeQualityScore: " +to_string(p.getlifeQualityScore()) + "\n EconomyScore: " + to_string(p.getEconomyScore()) + "\n EnvironmentScore:" + to_string(p.getEnvironmentScore()) + "\n";
         cout << planInfo;
     }
 
