@@ -389,6 +389,9 @@ Plan &Simulation:: getPlan(const int planID) {
         }
 
     }
+
+    // this will always return a plan reference since we check there is 
+    // such a plan for the planID before calling the function
 }
 void Simulation:: step(){
     for (int i = 0; i < planCounter; i++){

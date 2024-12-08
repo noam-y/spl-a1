@@ -5,10 +5,10 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "{workspaceFolder}/skeleton/bin/program",
+            "program": "{workspaceFolder}/skeleton/bin/simulation",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "{workspaceFolder}/bin/program",
+            "cwd": "{workspaceFolder}/bin/simulation",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -30,7 +30,7 @@
             "name": "(gdb) Attach",
             "type": "cppdbg",
             "request": "attach",
-            "program": "{workspaceFolder}/bin/program",
+            "program": "{workspaceFolder}/bin/simulation",
             "MIMode": "gdb",
             "setupCommands": [
                 {
@@ -49,7 +49,7 @@
             "name": "Linux",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/program",
+            "program": "${workspaceFolder}/bin/simulation",
             "args": [
                 "config_file.txt"
             ],

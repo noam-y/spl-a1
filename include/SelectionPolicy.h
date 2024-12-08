@@ -37,7 +37,7 @@ class BalancedSelection: public SelectionPolicy {
         ~BalancedSelection() override = default;
         //helper function to calculate diffrences:
         int balanceDiff(int lifeScore, int economyScore, int environmentScore);
-        const string addScore(int lifeAdd,int ecoAdd,int envAdd);
+        void addScore(int lifeAdd,int ecoAdd,int envAdd);
     private:
         int LifeQualityScore;
         int EconomyScore;

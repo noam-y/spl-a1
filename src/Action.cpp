@@ -229,7 +229,7 @@ void ChangePlanPolicy::act(Simulation &simulation){
         Plan& p = simulation.getPlan(planId);
         cout << "plan ID: "  + to_string(planId) + "\nold policy: " + p.getSelectionPolicy()->toString() << endl;
         if (newPolicy == "bal"){
-            if (p.getSelectionPolicy()->toString() == newPolicy) {
+            if (p.getSelectionPolicy()->toString() == newPolicy || simulation.getPlanCount() - 1 < planId) {
                  error("can not change policy");
                  }
             else {
